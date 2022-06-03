@@ -61,7 +61,7 @@ public class solidMobsMain implements ModInitializer {
         }
     }
 
-    public void sm$loadConfig() {
+    public static void sm$loadConfig() {
         File config = new File(FabricLoader.getInstance().getConfigDir().toFile(), "solid_mobs.json");
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         if (config.exists()) {

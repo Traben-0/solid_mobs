@@ -9,6 +9,7 @@
     "MixinPlayerManager"
   ],
   "client": [
+    "MixinMinecraftClient"
   ],
   "injectors": {
     "defaultRequire": 1
