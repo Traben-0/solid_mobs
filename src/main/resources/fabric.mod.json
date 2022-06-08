@@ -1,13 +1,25 @@
 {
   "schemaVersion": 1,
   "id": "solid_mobs",
-  "version": "0.2",
+  "version": "1.0",
   "name": "Solid Mobs",
-  "description": "dsa",
-  "authors": [],
-  "contact": {},
+  "description": "Makes mobs have collisions\nCustomizable via config file in config folder.\nServer config will override client config",
+  "authors": [
+    {
+    "name": "Traben",
+    "contact": {
+      "homepage": "https://www.curseforge.com/members/traben_0/projects",
+      "discord": "https://discord.gg/rURmwrzUcz"
+    }
+  }],
+  "contact": {
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/entity-texture-features-fabric",
+    "sources": "https://github.com/Traben-0/Entity_Texture_Features",
+    "issues": "https://github.com/Traben-0/Entity_Texture_Features/issues",
+    "discord": "https://discord.gg/rURmwrzUcz"
+  },
   "license": "LGPL-3.0",
-  "icon": "assets/solid_mobs/icon.png",
+  "icon": "icon.png",
   "environment": "*",
   "entrypoints": {
     "client": [
@@ -24,5 +36,12 @@
     "fabricloader": ">=0.13",
     "minecraft": "1.18.x",
     "fabric": "*"
+  },
+  "custom": {
+    "modmenu": {
+      "links": {
+        "modmenu.website": "https://www.curseforge.com/members/traben_0/projects"
+      }
+    }
   }
 }
