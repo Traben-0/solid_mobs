@@ -31,9 +31,10 @@ public abstract class MixinPlayerManager {
         buf.writeBoolean(solidMobsConfigData.allowPlayerCollisions);
         buf.writeBoolean(solidMobsConfigData.allowPetCollisions);
         buf.writeBoolean(solidMobsConfigData.bouncySlimes);
-        buf.writeBoolean(solidMobsConfigData.fallDamageHalvedWithLandedOnMob);
+        buf.writeBoolean(solidMobsConfigData.fallDamageSharedWithLandedOnMob);
         buf.writeFloat(solidMobsConfigData.getFallAbsorbAmount());
         buf.writeBoolean(solidMobsConfigData.allowPaintingAndItemFrameCollisions);
+        buf.writeBoolean(solidMobsConfigData.allowInvisibleCollisions);
         ///////////////////////////////////////////////
 
         ServerPlayNetworking.send(player, solidMobsMain.serverConfigPacketID, buf);

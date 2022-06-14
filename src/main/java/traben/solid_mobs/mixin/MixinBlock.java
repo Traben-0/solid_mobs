@@ -7,6 +7,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.BlockView;
@@ -34,7 +35,7 @@ public abstract class MixinBlock {
             if (state == null)
                 state = this.getDefaultState();
             if (state.isOf(Blocks.AIR) || state.isOf(Blocks.CAVE_AIR) || state.isOf(Blocks.VOID_AIR)) {
-                if (solidMobsConfigData.fallDamageHalvedWithLandedOnMob || solidMobsConfigData.bouncySlimes) {
+                if (solidMobsConfigData.fallDamageSharedWithLandedOnMob || solidMobsConfigData.bouncySlimes) {
                     //vanilla assumes fall is always into block find and entity to halve fall damage to
                     List<Entity> fellOnEntities = world.getOtherEntities(entity, entity.getBoundingBox().offset(0, -0.5/*entity.getBoundingBox().getYLength()*/, 0));
                     if (!fellOnEntities.isEmpty()) {
@@ -46,10 +47,20 @@ public abstract class MixinBlock {
                                 //bounceUp(entity);
                                 cancel = true;
 
-                            } else if (solidMobsConfigData.fallDamageHalvedWithLandedOnMob) {
+                            } else if (solidMobsConfigData.fallDamageSharedWithLandedOnMob) {
                                 //just apply to first found no need to be picky
+
+                                //get damage source incase of possible AI need to retaliate or flee damage source
+                                DamageSource source;
+                                if(entity instanceof PlayerEntity plyr){
+                                    source = DamageSource.player(plyr);
+                                }else if(entity instanceof LivingEntity alive){
+                                    source = DamageSource.mob(alive);
+                                }else{
+                                    source = DamageSource.FALLING_BLOCK;
+                                }
                                 entity.handleFallDamage(fallDistance, 1.0F - solidMobsConfigData.getFallAbsorbAmount(), DamageSource.FALL);
-                                cushion.handleFallDamage(fallDistance, solidMobsConfigData.getFallAbsorbAmount(), DamageSource.FALL);
+                                cushion.handleFallDamage(fallDistance, solidMobsConfigData.getFallAbsorbAmount(), source);
                                 cancel = true;
                             }
 

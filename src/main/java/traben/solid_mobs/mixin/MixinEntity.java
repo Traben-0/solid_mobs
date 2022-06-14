@@ -64,6 +64,10 @@ public abstract class MixinEntity {
 
     @Shadow public abstract boolean isConnectedThroughVehicle(Entity entity);
 
+    @Shadow public abstract boolean isAlive();
+
+    @Shadow public abstract boolean isLiving();
+
     @Inject(method = "isCollidable", cancellable = true, at = @At("RETURN"))
     private void etf$collisionOverride(CallbackInfoReturnable<Boolean> cir) {
         if(solidMobsConfigData.canUseMod(this.getWorld())) {
@@ -84,7 +88,9 @@ public abstract class MixinEntity {
                 //System.out.println("true for "+getName().getString());
                 returnValue = false;
                 //return false if invisible
-            } else returnValue = !isInvisible();
+            } else {
+                returnValue = isAlive() && !(!solidMobsConfigData.allowInvisibleCollisions && isInvisible());
+            }
 
             cir.setReturnValue(returnValue);
         }

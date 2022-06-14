@@ -10,9 +10,10 @@ public class Config {
     public boolean allowPlayerCollisions = true;
     public boolean allowPetCollisions = true;
     public boolean bouncySlimes = true;
-    public boolean fallDamageHalvedWithLandedOnMob = true;
+    public boolean fallDamageSharedWithLandedOnMob = true;
     private float  fallDamageAmountAbsorbedByLandedOnMob = 0.5F;
-    public boolean allowPaintingAndItemFrameCollisions = true;
+    public boolean allowPaintingAndItemFrameCollisions = false;
+    public boolean allowInvisibleCollisions = false;
 
     public float getFallAbsorbAmount(){
         if (fallDamageAmountAbsorbedByLandedOnMob > 1) return 1;

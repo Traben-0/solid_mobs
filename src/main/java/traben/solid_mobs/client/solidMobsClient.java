@@ -2,8 +2,8 @@ package traben.solid_mobs.client;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import traben.solid_mobs.solidMobsMain;
 import traben.solid_mobs.config.Config;
+import traben.solid_mobs.solidMobsMain;
 
 import static traben.solid_mobs.solidMobsMain.EXEMPT_ENTITIES;
 import static traben.solid_mobs.solidMobsMain.solidMobsConfigData;
@@ -24,9 +24,10 @@ public class solidMobsClient implements ClientModInitializer {
             solidMobsConfigData.allowPlayerCollisions = buf.readBoolean();
             solidMobsConfigData.allowPetCollisions = buf.readBoolean();
             solidMobsConfigData.bouncySlimes = buf.readBoolean();
-            solidMobsConfigData.fallDamageHalvedWithLandedOnMob = buf.readBoolean();
+            solidMobsConfigData.fallDamageSharedWithLandedOnMob = buf.readBoolean();
             solidMobsConfigData.setFallAbsorbAmount(buf.readFloat());
             solidMobsConfigData.allowPaintingAndItemFrameCollisions = buf.readBoolean();
+            solidMobsConfigData.allowInvisibleCollisions = buf.readBoolean();
             ///////////////////////////////////////////////
             EXEMPT_ENTITIES.clear();
             solidMobsMain.setupExemptions();
