@@ -37,34 +37,39 @@ public abstract class MixinBlock {
             if (state.isOf(Blocks.AIR) || state.isOf(Blocks.CAVE_AIR) || state.isOf(Blocks.VOID_AIR)) {
                 if (solidMobsConfigData.fallDamageSharedWithLandedOnMob || solidMobsConfigData.bouncySlimes) {
                     //vanilla assumes fall is always into block find and entity to halve fall damage to
-                    List<Entity> fellOnEntities = world.getOtherEntities(entity, entity.getBoundingBox().offset(0, -0.5/*entity.getBoundingBox().getYLength()*/, 0));
-                    if (!fellOnEntities.isEmpty()) {
-                        for (Entity cushion :
-                                fellOnEntities) {
-                            if ((cushion.getType().equals(EntityType.SLIME) || cushion.getType().equals(EntityType.MAGMA_CUBE))
-                                    && solidMobsConfigData.bouncySlimes
-                                    && !entity.bypassesLandingEffects()) {
-                                //bounceUp(entity);
-                                cancel = true;
+                    try {
+                        List<Entity> fellOnEntities = world.getOtherEntities(entity, entity.getBoundingBox().offset(0, -0.5/*entity.getBoundingBox().getYLength()*/, 0));
+                        if (!fellOnEntities.isEmpty()) {
+                            for (Entity cushion : fellOnEntities) {
+                                //                            for (Entity cushion :
+//                                    fellOnEntities) {
+                                if ((cushion.getType().equals(EntityType.SLIME) || cushion.getType().equals(EntityType.MAGMA_CUBE))
+                                        && solidMobsConfigData.bouncySlimes
+                                        && !entity.bypassesLandingEffects()) {
+                                    //bounceUp(entity);
+                                    cancel = true;
 
-                            } else if (solidMobsConfigData.fallDamageSharedWithLandedOnMob) {
-                                //just apply to first found no need to be picky
+                                } else if (solidMobsConfigData.fallDamageSharedWithLandedOnMob) {
+                                    //just apply to first found no need to be picky
 
-                                //get damage source incase of possible AI need to retaliate or flee damage source
-                                DamageSource source;
-                                if(entity instanceof PlayerEntity plyr){
-                                    source = DamageSource.player(plyr);
-                                }else if(entity instanceof LivingEntity alive){
-                                    source = DamageSource.mob(alive);
-                                }else{
-                                    source = DamageSource.FALLING_BLOCK;
+                                    //get damage source incase of possible AI need to retaliate or flee damage source
+                                    DamageSource source;
+                                    if (entity instanceof PlayerEntity plyr) {
+                                        source = DamageSource.player(plyr);
+                                    } else if (entity instanceof LivingEntity alive) {
+                                        source = DamageSource.mob(alive);
+                                    } else {
+                                        source = DamageSource.FALLING_BLOCK;
+                                    }
+                                    entity.handleFallDamage(fallDistance, 1.0F - solidMobsConfigData.getFallAbsorbAmount(), DamageSource.FALL);
+                                    cushion.handleFallDamage(fallDistance, solidMobsConfigData.getFallAbsorbAmount(), source);
+                                    cancel = true;
                                 }
-                                entity.handleFallDamage(fallDistance, 1.0F - solidMobsConfigData.getFallAbsorbAmount(), DamageSource.FALL);
-                                cushion.handleFallDamage(fallDistance, solidMobsConfigData.getFallAbsorbAmount(), source);
-                                cancel = true;
-                            }
 
+                            }
                         }
+                    }catch(Exception e){
+                        //
                     }
                 }
             }
@@ -80,16 +85,21 @@ public abstract class MixinBlock {
             if (this.getDefaultState().isOf(Blocks.AIR) || this.getDefaultState().isOf(Blocks.CAVE_AIR) || this.getDefaultState().isOf(Blocks.VOID_AIR)) {
                 if (solidMobsConfigData.bouncySlimes) {
                     //vanilla assumes fall is always into block find and entity to halve fall damage to
-                    List<Entity> fellOnEntities = entity.getWorld().getOtherEntities(entity, entity.getBoundingBox().offset(0, -0.5/*entity.getBoundingBox().getYLength()*/, 0));
-                    if (!fellOnEntities.isEmpty()) {
-                        for (Entity cushion :
-                                fellOnEntities) {
-                            if ((cushion.getType().equals(EntityType.SLIME) || cushion.getType().equals(EntityType.MAGMA_CUBE))
-                                    && !entity.bypassesLandingEffects()) {
-                                bounceUp(entity);
-                                ci.cancel();
+                    try {
+                        List<Entity> fellOnEntities = entity.getWorld().getOtherEntities(entity, entity.getBoundingBox().offset(0, -0.5/*entity.getBoundingBox().getYLength()*/, 0));
+                        if (!fellOnEntities.isEmpty()) {
+                            for (Entity cushion : fellOnEntities) {
+                                //                            for (Entity cushion :
+//                                    fellOnEntities) {
+                                if ((cushion.getType().equals(EntityType.SLIME) || cushion.getType().equals(EntityType.MAGMA_CUBE))
+                                        && !entity.bypassesLandingEffects()) {
+                                    bounceUp(entity);
+                                    ci.cancel();
+                                }
                             }
                         }
+                    }catch(Exception e){
+                        //
                     }
                 }
             }

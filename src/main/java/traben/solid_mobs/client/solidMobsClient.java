@@ -20,14 +20,17 @@ public class solidMobsClient implements ClientModInitializer {
             solidMobsConfigData = new Config();
             //PRESERVE WRITE ORDER IN READ
             /////////////////////////////////////////
-            solidMobsConfigData.allowGroundItemCollisions = buf.readBoolean();
+            //solidMobsConfigData.allowGroundItemCollisions = buf.readBoolean();
             solidMobsConfigData.allowPlayerCollisions = buf.readBoolean();
             solidMobsConfigData.allowPetCollisions = buf.readBoolean();
             solidMobsConfigData.bouncySlimes = buf.readBoolean();
             solidMobsConfigData.fallDamageSharedWithLandedOnMob = buf.readBoolean();
             solidMobsConfigData.setFallAbsorbAmount(buf.readFloat());
-            solidMobsConfigData.allowPaintingAndItemFrameCollisions = buf.readBoolean();
+            //solidMobsConfigData.allowPaintingAndItemFrameCollisions = buf.readBoolean();
             solidMobsConfigData.allowInvisibleCollisions = buf.readBoolean();
+            solidMobsConfigData.allowShovingMobs = buf.readBoolean();
+            solidMobsConfigData.shoveAgainTimeInTicks = buf.readInt();
+            solidMobsConfigData.allowVillagerCollisions = buf.readBoolean();
             ///////////////////////////////////////////////
             EXEMPT_ENTITIES.clear();
             solidMobsMain.setupExemptions();

@@ -27,14 +27,17 @@ public abstract class MixinPlayerManager {
         System.out.println("[Solid Mobs] - Sending server config to client.");
         //PRESERVE WRITE ORDER IN READ
         /////////////////////////////////////////
-        buf.writeBoolean(solidMobsConfigData.allowGroundItemCollisions);
+        //buf.writeBoolean(solidMobsConfigData.allowGroundItemCollisions);
         buf.writeBoolean(solidMobsConfigData.allowPlayerCollisions);
         buf.writeBoolean(solidMobsConfigData.allowPetCollisions);
         buf.writeBoolean(solidMobsConfigData.bouncySlimes);
         buf.writeBoolean(solidMobsConfigData.fallDamageSharedWithLandedOnMob);
         buf.writeFloat(solidMobsConfigData.getFallAbsorbAmount());
-        buf.writeBoolean(solidMobsConfigData.allowPaintingAndItemFrameCollisions);
+        //buf.writeBoolean(solidMobsConfigData.allowPaintingAndItemFrameCollisions);
         buf.writeBoolean(solidMobsConfigData.allowInvisibleCollisions);
+        buf.writeBoolean(solidMobsConfigData.allowShovingMobs);
+        buf.writeInt(solidMobsConfigData.shoveAgainTimeInTicks);
+        buf.writeBoolean(solidMobsConfigData.allowVillagerCollisions);
         ///////////////////////////////////////////////
 
         ServerPlayNetworking.send(player, solidMobsMain.serverConfigPacketID, buf);

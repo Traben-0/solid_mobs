@@ -6,6 +6,8 @@
   "mixins": [
     "MixinBlock",
     "MixinEntity",
+    "MixinMeleeAttackGoal",
+    "MixinPlayerEntity",
     "MixinPlayerManager"
   ],
   "client": [

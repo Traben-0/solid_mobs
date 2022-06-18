@@ -18,5 +18,6 @@ public abstract class MixinMinecraftClient {
         //reset to remove possible server config data
         solidMobsClient.haveServerConfig = false;
         solidMobsMain.sm$loadConfig();
+        solidMobsMain.lastPushTime.clear();
     }
 }

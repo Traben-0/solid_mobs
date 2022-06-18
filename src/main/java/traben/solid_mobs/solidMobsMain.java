@@ -12,7 +12,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.UUID;
 
 public class solidMobsMain implements ModInitializer {
 
@@ -22,6 +24,9 @@ public class solidMobsMain implements ModInitializer {
 
     public static final Identifier serverConfigPacketID = new Identifier("traben_solid_mobs:server_config_packet");
 
+    public static final HashMap<UUID, Long> lastPushTime = new HashMap<UUID,Long>();
+    public static final HashMap<UUID, Long> lastAttackTime = new HashMap<UUID,Long>();
+
     @Override
     public void onInitialize() {
         sm$loadConfig();
@@ -30,12 +35,16 @@ public class solidMobsMain implements ModInitializer {
 
     public static void setupExemptions(){
         EXEMPT_ENTITIES.add(EntityType.VEX);
-        if(!solidMobsConfigData.allowGroundItemCollisions)
-            EXEMPT_ENTITIES.add(EntityType.ITEM);
-        EXEMPT_ENTITIES.add(EntityType.ARROW);
-        EXEMPT_ENTITIES.add(EntityType.SPECTRAL_ARROW);
-        EXEMPT_ENTITIES.add(EntityType.AREA_EFFECT_CLOUD);
-        EXEMPT_ENTITIES.add(EntityType.EXPERIENCE_ORB);
+        //if(!solidMobsConfigData.allowGroundItemCollisions)
+        //    EXEMPT_ENTITIES.add(EntityType.ITEM);
+        //EXEMPT_ENTITIES.add(EntityType.ARROW);
+        //EXEMPT_ENTITIES.add(EntityType.SPECTRAL_ARROW);
+        //EXEMPT_ENTITIES.add(EntityType.AREA_EFFECT_CLOUD);
+        //EXEMPT_ENTITIES.add(EntityType.EXPERIENCE_ORB);
+
+        if(!solidMobsConfigData.allowVillagerCollisions) {
+            EXEMPT_ENTITIES.add(EntityType.VILLAGER);
+        }
 
         if(!solidMobsConfigData.allowPetCollisions) {
             EXEMPT_ENTITIES.add(EntityType.WOLF);
@@ -43,22 +52,22 @@ public class solidMobsMain implements ModInitializer {
             EXEMPT_ENTITIES.add(EntityType.PARROT);
         }
         EXEMPT_ENTITIES.add(EntityType.ENDER_DRAGON);
-        EXEMPT_ENTITIES.add(EntityType.POTION);
-        EXEMPT_ENTITIES.add(EntityType.EGG);
-        EXEMPT_ENTITIES.add(EntityType.ENDER_PEARL);
-        EXEMPT_ENTITIES.add(EntityType.EXPERIENCE_BOTTLE);
-        EXEMPT_ENTITIES.add(EntityType.EYE_OF_ENDER);
-        EXEMPT_ENTITIES.add(EntityType.LLAMA_SPIT);
-        EXEMPT_ENTITIES.add(EntityType.SHULKER_BULLET);
-        EXEMPT_ENTITIES.add(EntityType.SPECTRAL_ARROW);
-        EXEMPT_ENTITIES.add(EntityType.SNOWBALL);
-        EXEMPT_ENTITIES.add(EntityType.TRIDENT);
-        EXEMPT_ENTITIES.add(EntityType.WITHER_SKULL);
-        if(!solidMobsConfigData.allowPaintingAndItemFrameCollisions) {
-            EXEMPT_ENTITIES.add(EntityType.PAINTING);
-            EXEMPT_ENTITIES.add(EntityType.ITEM_FRAME);
-            EXEMPT_ENTITIES.add(EntityType.GLOW_ITEM_FRAME);
-        }
+        //EXEMPT_ENTITIES.add(EntityType.POTION);
+        //EXEMPT_ENTITIES.add(EntityType.EGG);
+        //EXEMPT_ENTITIES.add(EntityType.ENDER_PEARL);
+        //EXEMPT_ENTITIES.add(EntityType.EXPERIENCE_BOTTLE);
+        //EXEMPT_ENTITIES.add(EntityType.EYE_OF_ENDER);
+        //EXEMPT_ENTITIES.add(EntityType.LLAMA_SPIT);
+        //EXEMPT_ENTITIES.add(EntityType.SHULKER_BULLET);
+        //EXEMPT_ENTITIES.add(EntityType.SPECTRAL_ARROW);
+        //EXEMPT_ENTITIES.add(EntityType.SNOWBALL);
+        //EXEMPT_ENTITIES.add(EntityType.TRIDENT);
+        //EXEMPT_ENTITIES.add(EntityType.WITHER_SKULL);
+        //if(!solidMobsConfigData.allowPaintingAndItemFrameCollisions) {
+        //    EXEMPT_ENTITIES.add(EntityType.PAINTING);
+        //    EXEMPT_ENTITIES.add(EntityType.ITEM_FRAME);
+        //    EXEMPT_ENTITIES.add(EntityType.GLOW_ITEM_FRAME);
+        //}
     }
 
     public static void sm$loadConfig() {

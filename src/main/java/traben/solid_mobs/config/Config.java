@@ -6,14 +6,18 @@ import traben.solid_mobs.client.solidMobsClient;
 
 public class Config {
 
-    public boolean allowGroundItemCollisions = false;
+   // public boolean allowGroundItemCollisions = false;
     public boolean allowPlayerCollisions = true;
     public boolean allowPetCollisions = true;
     public boolean bouncySlimes = true;
     public boolean fallDamageSharedWithLandedOnMob = true;
     private float  fallDamageAmountAbsorbedByLandedOnMob = 0.5F;
-    public boolean allowPaintingAndItemFrameCollisions = false;
+   // public boolean allowPaintingAndItemFrameCollisions = false;
     public boolean allowInvisibleCollisions = false;
+
+    public boolean allowShovingMobs = true;
+    public int shoveAgainTimeInTicks = 20;
+    public boolean allowVillagerCollisions = true;
 
     public float getFallAbsorbAmount(){
         if (fallDamageAmountAbsorbedByLandedOnMob > 1) return 1;

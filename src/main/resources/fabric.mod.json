@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "solid_mobs",
-  "version": "1.2",
+  "version": "1.3",
   "name": "Solid Mobs",
   "description": "Makes mobs have collisions\nCustomizable via config file in config folder.\nServer config will override client config",
   "authors": [

@@ -16,10 +16,11 @@ The config allows tweaking of certain collisions, for example you can disable pl
 this mod **MUST be on both the server and client**, otherwise you will have stuttering and de-sync while colliding with mobs (you won't crash or any issue like that, but it is annoying)
 
 ### Features:
-- all entities are collide-able (with some exceptions that can be set by the config & some hardcoded like projectiles and the ender dragon that act a bit weird)
+- all living mobs are collide-able (with some exceptions that can be set by the config & some hardcoded like the ender dragon that act a bit weird)
 - config file (*"minecraft/config/solid_mobs.json"*) can be set to enable or disable certain collisions and tweak fall damage transfer amount
 - option to have the mobs fallen onto take a percentage of the fall damage
 - option to have slimes be bouncy like slime blocks
+- option to disable pet mob collisions
 - when walking/riding a mob you move with them
 - can hold crouch while on a mob to snap to it and never fall off
 - Server config will sync with joining clients
