@@ -36,11 +36,11 @@ public class solidMobsMain implements ModInitializer {
     public static void setupExemptions(){
         EXEMPT_ENTITIES.add(EntityType.VEX);
         //if(!solidMobsConfigData.allowGroundItemCollisions)
-        //    EXEMPT_ENTITIES.add(EntityType.ITEM);
-        //EXEMPT_ENTITIES.add(EntityType.ARROW);
-        //EXEMPT_ENTITIES.add(EntityType.SPECTRAL_ARROW);
-        //EXEMPT_ENTITIES.add(EntityType.AREA_EFFECT_CLOUD);
-        //EXEMPT_ENTITIES.add(EntityType.EXPERIENCE_ORB);
+        EXEMPT_ENTITIES.add(EntityType.ITEM);
+        EXEMPT_ENTITIES.add(EntityType.ARROW);
+        EXEMPT_ENTITIES.add(EntityType.SPECTRAL_ARROW);
+        EXEMPT_ENTITIES.add(EntityType.AREA_EFFECT_CLOUD);
+        EXEMPT_ENTITIES.add(EntityType.EXPERIENCE_ORB);
 
         if(!solidMobsConfigData.allowVillagerCollisions) {
             EXEMPT_ENTITIES.add(EntityType.VILLAGER);
@@ -52,21 +52,21 @@ public class solidMobsMain implements ModInitializer {
             EXEMPT_ENTITIES.add(EntityType.PARROT);
         }
         EXEMPT_ENTITIES.add(EntityType.ENDER_DRAGON);
-        //EXEMPT_ENTITIES.add(EntityType.POTION);
-        //EXEMPT_ENTITIES.add(EntityType.EGG);
-        //EXEMPT_ENTITIES.add(EntityType.ENDER_PEARL);
-        //EXEMPT_ENTITIES.add(EntityType.EXPERIENCE_BOTTLE);
-        //EXEMPT_ENTITIES.add(EntityType.EYE_OF_ENDER);
-        //EXEMPT_ENTITIES.add(EntityType.LLAMA_SPIT);
-        //EXEMPT_ENTITIES.add(EntityType.SHULKER_BULLET);
-        //EXEMPT_ENTITIES.add(EntityType.SPECTRAL_ARROW);
-        //EXEMPT_ENTITIES.add(EntityType.SNOWBALL);
-        //EXEMPT_ENTITIES.add(EntityType.TRIDENT);
-        //EXEMPT_ENTITIES.add(EntityType.WITHER_SKULL);
+        EXEMPT_ENTITIES.add(EntityType.POTION);
+        EXEMPT_ENTITIES.add(EntityType.EGG);
+        EXEMPT_ENTITIES.add(EntityType.ENDER_PEARL);
+        EXEMPT_ENTITIES.add(EntityType.EXPERIENCE_BOTTLE);
+        EXEMPT_ENTITIES.add(EntityType.EYE_OF_ENDER);
+        EXEMPT_ENTITIES.add(EntityType.LLAMA_SPIT);
+        EXEMPT_ENTITIES.add(EntityType.SHULKER_BULLET);
+        EXEMPT_ENTITIES.add(EntityType.SPECTRAL_ARROW);
+        EXEMPT_ENTITIES.add(EntityType.SNOWBALL);
+        EXEMPT_ENTITIES.add(EntityType.TRIDENT);
+        EXEMPT_ENTITIES.add(EntityType.WITHER_SKULL);
         //if(!solidMobsConfigData.allowPaintingAndItemFrameCollisions) {
-        //    EXEMPT_ENTITIES.add(EntityType.PAINTING);
-        //    EXEMPT_ENTITIES.add(EntityType.ITEM_FRAME);
-        //    EXEMPT_ENTITIES.add(EntityType.GLOW_ITEM_FRAME);
+            EXEMPT_ENTITIES.add(EntityType.PAINTING);
+            EXEMPT_ENTITIES.add(EntityType.ITEM_FRAME);
+            EXEMPT_ENTITIES.add(EntityType.GLOW_ITEM_FRAME);
         //}
     }
 

@@ -1,5 +1,9 @@
 Solid mobs change-log
 
+## v1.4
+- fixed an issue with item entities glitching around when thrown and similar problems with projectile entities
+
+
 ## v1.3
 - added ability to shove mobs out of your way without punching if you get stuck, simply right click them while crouching to give a small knock-back, has a cool-down time set by config, *(less effective on villagers, longer cooldown & triggers reaction from hostile mobs)*
 - config option added to allow or disable villager collisions *(A big part of villagers I believe is that they have a mind of their own, I do not want to encroach on this and have limited their shove-ability, as this means you can possibly get stuck the option to disable villager collisions has been added)*

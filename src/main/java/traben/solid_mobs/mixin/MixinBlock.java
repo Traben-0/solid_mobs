@@ -95,6 +95,7 @@ public abstract class MixinBlock {
                                         && !entity.bypassesLandingEffects()) {
                                     bounceUp(entity);
                                     ci.cancel();
+                                    break;
                                 }
                             }
                         }

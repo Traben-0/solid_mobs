@@ -67,8 +67,7 @@ public abstract class MixinEntity {
                 if (EXEMPT_ENTITIES.contains(getType())) {
                     //System.out.println("true for "+getName().getString());
                     returnValue = false;
-                    //return false if invisible
-                } else {
+                } else {//return false if invisible
                     returnValue = isAlive() && !(!solidMobsConfigData.allowInvisibleCollisions && isInvisible());
                 }
 
@@ -80,11 +79,10 @@ public abstract class MixinEntity {
     @Inject(method = "collidesWith", cancellable = true, at = @At("RETURN"))
     private void etf$collisionOverride(Entity other, CallbackInfoReturnable<Boolean> cir) {
         if (solidMobsConfigData.canUseMod(this.getWorld())) {
-            if (this.isLiving() && other.isLiving()) {
-
-                if (EXEMPT_ENTITIES.contains(getType()) || EXEMPT_ENTITIES.contains(other.getType())) {
-                    cir.setReturnValue(false);
-                } else if (getType().equals(EntityType.PLAYER) && other.getType().equals(EntityType.PLAYER)) {
+            if (EXEMPT_ENTITIES.contains(getType()) || EXEMPT_ENTITIES.contains(other.getType())) {
+                cir.setReturnValue(false);
+            } else if (this.isLiving() && other.isLiving()) {
+                if (getType().equals(EntityType.PLAYER) && other.getType().equals(EntityType.PLAYER)) {
                     //only affect player on player collisions we still need other things to collide with players so PLAYER cannot be in exempt list
                     if (solidMobsConfigData.allowPlayerCollisions) {
                         cir.setReturnValue(!isConnectedThroughVehicle(other));
@@ -92,20 +90,6 @@ public abstract class MixinEntity {
                         cir.setReturnValue(false);
                     }
                 }
-//                else if ((LivingEntity)(Object)this instanceof HostileEntity hostile){
-//                    try {
-//                        LivingEntity target = hostile.getTarget();
-//                        if (target != null) {
-//                            if (target.getUuid().equals(other.getUuid()) && hostile.getLastAttackTime() + 40 < hostile.age) {
-//                                hostile.swingHand(Hand.MAIN_HAND);
-//                                if (!getWorld().isClient())
-//                                    hostile.tryAttack(other);
-//                            }
-//                        }
-//                    }catch(Exception e){
-//                        //failed attack
-//                    }
-//                }
             }
         }
     }

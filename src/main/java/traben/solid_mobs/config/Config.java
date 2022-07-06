@@ -35,11 +35,7 @@ public class Config {
             if( MinecraftClient.getInstance().isInSingleplayer()){
                 return true;
             }else{
-                if(solidMobsClient.haveServerConfig){
-                    return true;
-                }else{
-                    return false;
-                }
+                return solidMobsClient.haveServerConfig;
             }
         }else{
             return true;
