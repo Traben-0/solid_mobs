@@ -2,7 +2,7 @@
   "required": true,
   "minVersion": "0.8",
   "package": "traben.solid_mobs.mixin",
-  "compatibilityLevel": "JAVA_8",
+  "compatibilityLevel": "JAVA_17",
   "mixins": [
     "MixinBlock",
     "MixinEntity",
@@ -11,7 +11,8 @@
     "MixinPlayerManager"
   ],
   "client": [
-    "MixinMinecraftClient"
+    "MixinMinecraftClient",
+    "MixinPlayerEntityClient"
   ],
   "injectors": {
     "defaultRequire": 1

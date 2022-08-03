@@ -84,8 +84,13 @@ public class solidMobsMain implements ModInitializer {
             }
         } else {
             solidMobsConfigData = new Config();
-            saveConfig();
+
         }
+        //if(FabricLoader.getInstance().isModLoaded("walljump")) {
+        //    System.out.println("Solid mobs detected the 'walljump' mod, invisible collisions forcibly enabled for compatibility");
+        //    solidMobsConfigData.allowInvisibleCollisions = true;
+        //}
+        saveConfig();
     }
     public static void saveConfig() {
         File config = new File(FabricLoader.getInstance().getConfigDir().toFile(), "solid_mobs.json");

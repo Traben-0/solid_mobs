@@ -48,7 +48,7 @@ public abstract class MixinEntity {
     @Shadow public abstract UUID getUuid();
 
     @Inject(method = "isCollidable", cancellable = true, at = @At("RETURN"))
-    private void etf$collisionOverride(CallbackInfoReturnable<Boolean> cir) {
+    private void sm$collisionOverride(CallbackInfoReturnable<Boolean> cir) {
         if(solidMobsConfigData.canUseMod(this.getWorld())) {
             if (this.isLiving()) {
                 //System.out.println(getType().toString());
@@ -68,7 +68,13 @@ public abstract class MixinEntity {
                     //System.out.println("true for "+getName().getString());
                     returnValue = false;
                 } else {//return false if invisible
-                    returnValue = isAlive() && !(!solidMobsConfigData.allowInvisibleCollisions && isInvisible());
+
+                    if(solidMobsConfigData.allowInvisibleCollisions){
+                        returnValue = isAlive();
+                    }else{
+                        returnValue = isAlive() && !isInvisible();
+                    }
+                    //returnValue = isAlive() && !(!solidMobsConfigData.allowInvisibleCollisions && isInvisible());
                 }
 
                 cir.setReturnValue(returnValue);
@@ -77,7 +83,7 @@ public abstract class MixinEntity {
     }
 
     @Inject(method = "collidesWith", cancellable = true, at = @At("RETURN"))
-    private void etf$collisionOverride(Entity other, CallbackInfoReturnable<Boolean> cir) {
+    private void sm$collisionOverride(Entity other, CallbackInfoReturnable<Boolean> cir) {
         if (solidMobsConfigData.canUseMod(this.getWorld())) {
             if (EXEMPT_ENTITIES.contains(getType()) || EXEMPT_ENTITIES.contains(other.getType())) {
                 cir.setReturnValue(false);
@@ -99,7 +105,7 @@ public abstract class MixinEntity {
 
 
     @Inject(method = "tick", at = @At("TAIL"))
-    private void etf$moveWalkingRider(CallbackInfo ci) {
+    private void sm$moveWalkingRider(CallbackInfo ci) {
         if(solidMobsConfigData.canUseMod(this.getWorld()) && this.isLiving()) {
             if (!EXEMPT_ENTITIES.contains(getType())) {
                 if ((getType().equals(EntityType.SLIME) || getType().equals(EntityType.MAGMA_CUBE)) && solidMobsConfigData.bouncySlimes) {

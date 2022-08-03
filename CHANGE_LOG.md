@@ -1,5 +1,8 @@
 Solid mobs change-log
 
+## v1.5
+- fixed an issue with dedicated servers crashing on load
+
 ## v1.4
 - fixed an issue with item entities glitching around when thrown and similar problems with projectile entities
 
