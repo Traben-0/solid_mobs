@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "mixin": [
+    "solid_mobs.mixins.json",
+    "solid_mobs-common.mixins.json"
+  ],
+  "quilt_loader": {
+    "group": "${group}",
+    "id": "solid_mobs",
+    "version": "${version}",
+    "name": "Solid Mobs",
+    "description": "Makes mobs have collisions\nCustomizable via config file in config folder.\nServer config will override client config",
+    "authors": [
+      {
+        "name": "Traben",
+        "contact": {
+          "homepage": "https://www.curseforge.com/members/traben_0/projects",
+          "discord": "https://discord.gg/rURmwrzUcz"
+        }
+      }],
+    "contact": {
+      "homepage": "https://www.curseforge.com/minecraft/mc-mods/entity-texture-features-fabric",
+      "sources": "https://github.com/Traben-0/Entity_Texture_Features",
+      "issues": "https://github.com/Traben-0/Entity_Texture_Features/issues",
+      "discord": "https://discord.gg/rURmwrzUcz"
+    },
+    "license": "LGPL-3.0",
+    "icon": "icon.png",
+    "intermediate_mappings": "net.fabricmc:intermediary",
+    "environment": "*",
+    "entrypoints": {
+      "init": [
+        "traben.solid_mobs.quilt.SolidMobsQuiltMain"
+      ],
+      "client_init": [
+        "traben.solid_mobs.quilt.SolidMobsQuiltClient"
+      ]
+    },
+    "depends": [
+      {
+        "id": "quilt_loader",
+        "version": "*"
+      },
+      {
+        "id": "quilt_base",
+        "version": "*"
+      },
+      {
+        "id": "minecraft",
+        "version": ">=1.19.2"
+      }
+    ]
+  },
+  "custom": {
+    "modmenu": {
+      "links": {
+        "modmenu.website": "https://www.curseforge.com/members/traben_0/projects"
+      }
+    },
+    "lithium:options": {
+      "mixin.entity.collisions": false
+    }
+  }
+}

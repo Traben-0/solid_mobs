@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "package": "traben.solid_mobs.quilt",
+  "compatibilityLevel": "JAVA_17",
+  "client": [
+  ],
+  "mixins": [
+    "mixin.MixinMeleeAttackGoal",
+    "mixin.MixinPlayerManager"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

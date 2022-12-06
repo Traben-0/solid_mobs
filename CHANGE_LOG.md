@@ -1,5 +1,10 @@
 Solid mobs change-log
 
+## V1.6
+- added forge support
+- added `entityCollisionBlacklist` in the config file which lets you blacklist certain mobs from having collisions, supports modded entities, formatted like:
+` "entityCollisionBlacklist": ["entity.minecraft.creeper","entity.ratsmischief.rat"]`
+
 ## v1.5
 - fixed an issue with dedicated servers crashing on load
 
