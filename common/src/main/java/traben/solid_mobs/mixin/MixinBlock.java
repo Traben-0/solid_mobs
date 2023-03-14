@@ -7,6 +7,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.damage.DamageSources;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -54,14 +55,15 @@ public abstract class MixinBlock {
 
                                     //get damage source incase of possible AI need to retaliate or flee damage source
                                     DamageSource source;
+                                    DamageSources sources = entity.getDamageSources();
                                     if (entity instanceof PlayerEntity plyr) {
-                                        source = DamageSource.player(plyr);
+                                        source = sources.playerAttack(plyr);
                                     } else if (entity instanceof LivingEntity alive) {
-                                        source = DamageSource.mob(alive);
+                                        source = sources.mobAttack(alive);
                                     } else {
-                                        source = DamageSource.FALLING_BLOCK;
+                                        source = sources.fall();
                                     }
-                                    entity.handleFallDamage(fallDistance, 1.0F - solidMobsConfigData.getFallAbsorbAmount(), DamageSource.FALL);
+                                    entity.handleFallDamage(fallDistance, 1.0F - solidMobsConfigData.getFallAbsorbAmount(), sources.fall());
                                     cushion.handleFallDamage(fallDistance, solidMobsConfigData.getFallAbsorbAmount(), source);
                                     cancel = true;
                                 }
