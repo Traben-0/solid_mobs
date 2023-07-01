@@ -3,6 +3,7 @@ package traben.solid_mobs.mixin;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -57,7 +58,7 @@ public abstract class MixinPlayerEntity extends LivingEntity {
                     lastPushTime.put(getUuid(), world.getTime() + (solidMobsConfigData.shoveAgainTimeInTicks * 2L));
                     swingHand(Hand.MAIN_HAND);
                 } else if (entity instanceof HostileEntity enemy) {
-                    enemy.damage(enemy.getDamageSources().playerAttack((PlayerEntity) (Object) this), 0);
+                    enemy.damage(DamageSource.player((PlayerEntity) (Object) this), 0);
                     //enemy.setAttacker((PlayerEntity) (Object)this);
                     //enemy.takeKnockback(0.5d, -(entity.getX() - this.getX()), -(entity.getZ() - this.getZ()));
                     lastPushTime.put(getUuid(), world.getTime() + (solidMobsConfigData.shoveAgainTimeInTicks * 5L));

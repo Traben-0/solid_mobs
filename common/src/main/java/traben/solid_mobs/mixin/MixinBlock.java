@@ -7,7 +7,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.damage.DamageSources;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -32,52 +31,56 @@ public abstract class MixinBlock {
     @Inject(method = "onLandedUpon", cancellable = true, at = @At("HEAD"))
     private void etf$fallDamageRedirect(World world, BlockState state, BlockPos pos, Entity entity, float fallDistance, CallbackInfo ci) {
         if(solidMobsConfigData.canUseMod(world)) {
-            boolean cancel = false;
-            if (state == null)
-                state = this.getDefaultState();
-            if (state.isOf(Blocks.AIR) || state.isOf(Blocks.CAVE_AIR) || state.isOf(Blocks.VOID_AIR)) {
-                if (solidMobsConfigData.fallDamageSharedWithLandedOnMob || solidMobsConfigData.bouncySlimes) {
-                    //vanilla assumes fall is always into block find and entity to halve fall damage to
-                    try {
-                        List<Entity> fellOnEntities = world.getOtherEntities(entity, entity.getBoundingBox().offset(0, -0.5/*entity.getBoundingBox().getYLength()*/, 0));
-                        if (!fellOnEntities.isEmpty()) {
-                            for (Entity cushion : fellOnEntities) {
-                                //                            for (Entity cushion :
+            try {
+                boolean cancel = false;
+                if (state == null)
+                    state = this.getDefaultState();
+                if (state.isOf(Blocks.AIR) || state.isOf(Blocks.CAVE_AIR) || state.isOf(Blocks.VOID_AIR)) {
+                    if (solidMobsConfigData.fallDamageSharedWithLandedOnMob || solidMobsConfigData.bouncySlimes) {
+                        //vanilla assumes fall is always into block find and entity to halve fall damage to
+                        try {
+                            List<Entity> fellOnEntities = world.getOtherEntities(entity, entity.getBoundingBox().offset(0, -0.5/*entity.getBoundingBox().getYLength()*/, 0));
+                            if (!fellOnEntities.isEmpty()) {
+                                for (Entity cushion : fellOnEntities) {
+                                    //                            for (Entity cushion :
 //                                    fellOnEntities) {
-                                if ((cushion.getType().equals(EntityType.SLIME) || cushion.getType().equals(EntityType.MAGMA_CUBE))
-                                        && solidMobsConfigData.bouncySlimes
-                                        && !entity.bypassesLandingEffects()) {
-                                    //bounceUp(entity);
-                                    cancel = true;
+                                    if ((cushion.getType().equals(EntityType.SLIME) || cushion.getType().equals(EntityType.MAGMA_CUBE))
+                                            && solidMobsConfigData.bouncySlimes
+                                            && !entity.bypassesLandingEffects()) {
+                                        //bounceUp(entity);
+                                        cancel = true;
 
-                                } else if (solidMobsConfigData.fallDamageSharedWithLandedOnMob) {
-                                    //just apply to first found no need to be picky
+                                    } else if (solidMobsConfigData.fallDamageSharedWithLandedOnMob) {
+                                        //just apply to first found no need to be picky
 
-                                    //get damage source incase of possible AI need to retaliate or flee damage source
-                                    DamageSource source;
-                                    DamageSources sources = entity.getDamageSources();
-                                    if (entity instanceof PlayerEntity plyr) {
-                                        source = sources.playerAttack(plyr);
-                                    } else if (entity instanceof LivingEntity alive) {
-                                        source = sources.mobAttack(alive);
-                                    } else {
-                                        source = sources.fall();
+                                        //get damage source incase of possible AI need to retaliate or flee damage source
+                                        DamageSource source;
+
+                                        if (entity instanceof PlayerEntity plyr) {
+                                            source = DamageSource.player(plyr);
+                                            entity.handleFallDamage(fallDistance, 1.0F - solidMobsConfigData.getFallAbsorbAmount(),  DamageSource.FALL);
+                                        } else if (entity instanceof LivingEntity alive) {
+                                            source = DamageSource.mob(alive);
+                                            entity.handleFallDamage(fallDistance, 1.0F - solidMobsConfigData.getFallAbsorbAmount(),  DamageSource.FALL);
+                                        } else {
+                                            source = DamageSource.FALL;
+                                        }
+                                        if(cushion instanceof LivingEntity)
+                                            cushion.handleFallDamage(fallDistance, solidMobsConfigData.getFallAbsorbAmount(), source);
+                                        cancel = true;
                                     }
-                                    entity.handleFallDamage(fallDistance, 1.0F - solidMobsConfigData.getFallAbsorbAmount(), sources.fall());
-                                    cushion.handleFallDamage(fallDistance, solidMobsConfigData.getFallAbsorbAmount(), source);
-                                    cancel = true;
-                                }
 
+                                }
                             }
+                        } catch (Exception e) {
+                            //
                         }
-                    }catch(Exception e){
-                        //
                     }
                 }
-            }
-            if (cancel) {
-                ci.cancel();
-            }
+                if (cancel) {
+                    ci.cancel();
+                }
+            }catch(Exception | NoSuchFieldError ignored){}
         }
     }
 

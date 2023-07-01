@@ -1,5 +1,5 @@
 modLoader = "javafml"
-loaderVersion = "[45,)"
+loaderVersion = "[40,)"
 issueTrackerURL = "https://github.com/Traben-0/solid_mobs/issues"
 license = "LGPL-3.0"
 
@@ -18,14 +18,14 @@ logoFile = "icon.png"
 [[dependencies.solid_mobs]]
 modId = "forge"
 mandatory = true
-versionRange = "[45,)"
+versionRange = "[40,)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.solid_mobs]]
 modId = "minecraft"
 mandatory = true
-versionRange = "[1.19.4,)"
+versionRange = "[1.18.2,)"
 ordering = "NONE"
 side = "BOTH"
 

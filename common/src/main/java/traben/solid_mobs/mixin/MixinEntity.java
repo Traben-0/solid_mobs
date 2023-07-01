@@ -20,30 +20,30 @@ import static traben.solid_mobs.solidMobsMain.solidMobsConfigData;
 @Mixin(Entity.class)
 public abstract class MixinEntity {
 
+
+    @Shadow public abstract World getWorld();
+
+    @Shadow public abstract boolean isLiving();
+
     @Shadow public abstract EntityType<?> getType();
 
+    @Shadow public abstract boolean isAlive();
+
     @Shadow public abstract boolean isInvisible();
+
+    @Shadow public abstract boolean isConnectedThroughVehicle(Entity entity);
 
     @Shadow public abstract World getEntityWorld();
 
     @Shadow private Box boundingBox;
 
-    @Shadow public abstract Vec3d getVelocity();
-
     @Shadow public abstract double getY();
-
-    @Shadow public abstract Vec3d getPos();
 
     @Shadow public abstract float getHeight();
 
-    @Shadow public abstract World getWorld();
+    @Shadow public abstract Vec3d getPos();
 
-    @Shadow public abstract boolean isConnectedThroughVehicle(Entity entity);
-
-    @Shadow public abstract boolean isAlive();
-
-    @Shadow public abstract boolean isLiving();
-
+    @Shadow public abstract Vec3d getVelocity();
 
     @Inject(method = "isCollidable", cancellable = true, at = @At("RETURN"))
     private void sm$collisionOverride(CallbackInfoReturnable<Boolean> cir) {
