@@ -1,25 +1,27 @@
 package traben.solid_mobs.fabriclike;
 
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import traben.solid_mobs.SolidMobsMain;
 import traben.solid_mobs.client.solidMobsClient;
 import traben.solid_mobs.config.Config;
-import traben.solid_mobs.solidMobsMain;
 
 import java.nio.charset.Charset;
 import java.util.HashSet;
 
-import static traben.solid_mobs.solidMobsMain.EXEMPT_ENTITIES;
-import static traben.solid_mobs.solidMobsMain.solidMobsConfigData;
+import static traben.solid_mobs.SolidMobsMain.EXEMPT_ENTITIES;
+import static traben.solid_mobs.SolidMobsMain.solidMobsConfigData;
 
 public class fabricLikeClient {
 
     public static void init(){
-            ClientPlayNetworking.registerGlobalReceiver(solidMobsMain.serverConfigPacketID, (client, handler, buf, responseSender) -> {
+            ClientPlayNetworking.registerGlobalReceiver(SolidMobsMain.serverConfigPacketID, (client, handler, buf, responseSender) -> {
                 //create server config
                 System.out.println("[Solid mobs] - Server Config data received and synced");
                 solidMobsConfigData = new Config();
                 //PRESERVE WRITE ORDER IN READ
                 /////////////////////////////////////////
+                solidMobsConfigData.allowNonSavingEntityCollisions = buf.readBoolean();
+                solidMobsConfigData.platformMode = buf.readBoolean();
                 solidMobsConfigData.allowItemCollisions = buf.readBoolean();
                 solidMobsConfigData.allowPlayerCollisions = buf.readBoolean();
                 solidMobsConfigData.allowPetCollisions = buf.readBoolean();
@@ -39,8 +41,8 @@ public class fabricLikeClient {
                 //split array string
                 solidMobsConfigData.entityCollisionBlacklist = read.split(", ");
                 //////////////////////////////////////////////////////
-                EXEMPT_ENTITIES = new HashSet<String>();
-                solidMobsMain.resetExemptions();
+                EXEMPT_ENTITIES = new HashSet<>();
+                SolidMobsMain.resetExemptions();
                 solidMobsClient.haveServerConfig = true;
             });
         }

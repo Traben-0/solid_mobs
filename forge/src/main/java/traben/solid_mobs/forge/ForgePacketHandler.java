@@ -2,12 +2,12 @@ package traben.solid_mobs.forge;
 
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;
-import traben.solid_mobs.solidMobsMain;
+import traben.solid_mobs.SolidMobsMain;
 
 public class ForgePacketHandler {
     private static final String PROTOCOL_VERSION = "1";
     public static final SimpleChannel INSTANCE = NetworkRegistry.newSimpleChannel(
-            solidMobsMain.serverConfigPacketID,
+            SolidMobsMain.serverConfigPacketID,
             () -> PROTOCOL_VERSION,
             PROTOCOL_VERSION::equals,
             PROTOCOL_VERSION::equals

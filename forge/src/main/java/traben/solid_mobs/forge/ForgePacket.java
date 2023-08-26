@@ -4,17 +4,17 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.network.NetworkEvent;
+import traben.solid_mobs.SolidMobsMain;
 import traben.solid_mobs.client.solidMobsClient;
 import traben.solid_mobs.config.Config;
-import traben.solid_mobs.solidMobsMain;
 
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.function.Supplier;
 
-import static traben.solid_mobs.solidMobsMain.EXEMPT_ENTITIES;
-import static traben.solid_mobs.solidMobsMain.solidMobsConfigData;
+import static traben.solid_mobs.SolidMobsMain.EXEMPT_ENTITIES;
+import static traben.solid_mobs.SolidMobsMain.solidMobsConfigData;
 
 
 public class ForgePacket 
@@ -26,6 +26,8 @@ public class ForgePacket
         System.out.println("[Solid Mobs] - Encoding server config packet for client.");
         //PRESERVE WRITE ORDER IN READ
         /////////////////////////////////////////
+        buffer.writeBoolean(solidMobsConfigData.allowNonSavingEntityCollisions);
+        buffer.writeBoolean(solidMobsConfigData.platformMode);
         buffer.writeBoolean(solidMobsConfigData.allowItemCollisions);
         buffer.writeBoolean(solidMobsConfigData.allowPlayerCollisions);
         buffer.writeBoolean(solidMobsConfigData.allowPetCollisions);
@@ -54,6 +56,8 @@ public class ForgePacket
                 System.out.println("[Solid mobs] - Server Config packet received");
                 //PRESERVE WRITE ORDER IN READ
                 /////////////////////////////////////////
+                packet.allowNonSavingEntityCollisions = buffer.readBoolean();
+                packet.platformMode = buffer.readBoolean();
                 packet.allowItemCollisions = buffer.readBoolean();
                 packet.allowPlayerCollisions = buffer.readBoolean();
                 packet.allowPetCollisions = buffer.readBoolean();
@@ -93,6 +97,9 @@ public class ForgePacket
     ////packet data
     private boolean is_valid;
 
+    private boolean platformMode;
+
+    private boolean allowNonSavingEntityCollisions;
     private boolean allowItemCollisions;
     private boolean allowPlayerCollisions;
     private boolean allowPetCollisions;
@@ -114,6 +121,8 @@ public class ForgePacket
 
             solidMobsConfigData = new Config();
             /////////////////////////////////////////
+            solidMobsConfigData.allowNonSavingEntityCollisions = this.allowNonSavingEntityCollisions;
+            solidMobsConfigData.platformMode = this.platformMode;
             solidMobsConfigData.allowItemCollisions = this.allowItemCollisions;
             solidMobsConfigData.allowPlayerCollisions = this.allowPlayerCollisions;
             solidMobsConfigData.allowPetCollisions = this.allowPetCollisions;
@@ -128,8 +137,8 @@ public class ForgePacket
             ///////////////////////////////////////////////
             solidMobsConfigData.entityCollisionBlacklist = this.entityCollisionBlacklist;
             ///////////////////////////////////////////////
-            EXEMPT_ENTITIES = new HashSet<String>();
-            solidMobsMain.resetExemptions();
+            EXEMPT_ENTITIES = new HashSet<>();
+            SolidMobsMain.resetExemptions();
             solidMobsClient.haveServerConfig = true;
             System.out.println("[Solid mobs] - Server Config data received and synced");
         }else{

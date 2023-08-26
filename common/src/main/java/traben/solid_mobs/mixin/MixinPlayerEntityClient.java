@@ -9,12 +9,13 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import static traben.solid_mobs.solidMobsMain.lastPushTime;
-import static traben.solid_mobs.solidMobsMain.solidMobsConfigData;
+import static traben.solid_mobs.SolidMobsMain.lastPushTime;
+import static traben.solid_mobs.SolidMobsMain.solidMobsConfigData;
 
 @Mixin(PlayerEntity.class)
 public abstract class MixinPlayerEntityClient extends LivingEntity {
@@ -47,6 +48,7 @@ public abstract class MixinPlayerEntityClient extends LivingEntity {
     }
 
     
+    @Unique
     private void sm$pushThisClient(LivingEntity entity){
         if (distanceTo(entity) < 2.5){
                 if (MinecraftClient.getInstance().player != null){

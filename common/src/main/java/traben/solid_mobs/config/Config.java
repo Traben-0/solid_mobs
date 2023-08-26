@@ -5,14 +5,18 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.world.World;
 import traben.solid_mobs.client.solidMobsClient;
 
+import java.util.Arrays;
+
 public class Config {
 
+    public boolean platformMode = false;
    public boolean allowItemCollisions = false;
+    public boolean allowNonSavingEntityCollisions = false;
     public boolean allowPlayerCollisions = true;
     public boolean allowPetCollisions = true;
     public boolean bouncySlimes = true;
     public boolean fallDamageSharedWithLandedOnMob = true;
-    private float  fallDamageAmountAbsorbedByLandedOnMob = 0.5F;
+    public float  fallDamageAmountAbsorbedByLandedOnMob = 0.5F;
    // public boolean allowPaintingAndItemFrameCollisions = false;
     public boolean allowInvisibleCollisions = false;
 
@@ -20,7 +24,8 @@ public class Config {
     public int shoveAgainTimeInTicks = 20;
     public boolean allowVillagerCollisions = true;
 
-    public String[] entityCollisionBlacklist = {"list the full ID of entities to disable their collisions e.g. -> \"entity.minecraft.creeper\" separated like the ratsmischief mod's rat example following","entity.ratsmischief.rat"};
+    public String[] entityCollisionBlacklist = {"entity.ratsmischief.rat"};
+
 
     public float getFallAbsorbAmount(){
         if (fallDamageAmountAbsorbedByLandedOnMob > 1) return 1;
@@ -44,5 +49,21 @@ public class Config {
             return true;
         }
 
+    }
+
+    @Override
+    public String toString() {
+        return "Solid Mobs, Settings:" +
+                "\n canItemsCollide=" + allowItemCollisions +
+                "\n canPlayersCollide=" + allowPlayerCollisions +
+                "\n canPetsCollide=" + allowPetCollisions +
+                "\n slimesAreBouncy=" + bouncySlimes +
+                "\n canFallDamageBeSharedWithLandedOnMobs=" + fallDamageSharedWithLandedOnMob +
+                "\n fallDamagePercentageSharedWithLandedOnMob=" + fallDamageAmountAbsorbedByLandedOnMob +
+                "\n canInvisibleMobsCollide=" + allowInvisibleCollisions +
+                "\n canShoveMobs=" + allowShovingMobs +
+                "\n shovingMobsCoolDownTicks=" + shoveAgainTimeInTicks +
+                "\n canVillagersCollide=" + allowVillagerCollisions +
+                "\n entityCollisionBlacklist=" + Arrays.toString(entityCollisionBlacklist);
     }
 }

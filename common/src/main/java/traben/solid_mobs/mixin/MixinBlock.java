@@ -15,13 +15,14 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
 
-import static traben.solid_mobs.solidMobsMain.solidMobsConfigData;
+import static traben.solid_mobs.SolidMobsMain.solidMobsConfigData;
 
 @Mixin(Block.class)
 public abstract class MixinBlock {
@@ -32,51 +33,54 @@ public abstract class MixinBlock {
     @Inject(method = "onLandedUpon", cancellable = true, at = @At("HEAD"))
     private void etf$fallDamageRedirect(World world, BlockState state, BlockPos pos, Entity entity, float fallDistance, CallbackInfo ci) {
         if(solidMobsConfigData.canUseMod(world)) {
-            boolean cancel = false;
-            if (state == null)
-                state = this.getDefaultState();
-            if (state.isOf(Blocks.AIR) || state.isOf(Blocks.CAVE_AIR) || state.isOf(Blocks.VOID_AIR)) {
-                if (solidMobsConfigData.fallDamageSharedWithLandedOnMob || solidMobsConfigData.bouncySlimes) {
-                    //vanilla assumes fall is always into block find and entity to halve fall damage to
-                    try {
-                        List<Entity> fellOnEntities = world.getOtherEntities(entity, entity.getBoundingBox().offset(0, -0.5/*entity.getBoundingBox().getYLength()*/, 0));
-                        if (!fellOnEntities.isEmpty()) {
-                            for (Entity cushion : fellOnEntities) {
-                                //                            for (Entity cushion :
+            try {
+                boolean cancel = false;
+                if (state == null)
+                    state = this.getDefaultState();
+                if (state.isOf(Blocks.AIR) || state.isOf(Blocks.CAVE_AIR) || state.isOf(Blocks.VOID_AIR)) {
+                    if (solidMobsConfigData.fallDamageSharedWithLandedOnMob || solidMobsConfigData.bouncySlimes) {
+                        //vanilla assumes fall is always into block find and entity to halve fall damage to
+                        try {
+                            List<Entity> fellOnEntities = world.getOtherEntities(entity, entity.getBoundingBox().offset(0, -0.5/*entity.getBoundingBox().getYLength()*/, 0));
+                            if (!fellOnEntities.isEmpty()) {
+                                for (Entity cushion : fellOnEntities) {
+                                    //                            for (Entity cushion :
 //                                    fellOnEntities) {
-                                if ((cushion.getType().equals(EntityType.SLIME) || cushion.getType().equals(EntityType.MAGMA_CUBE))
-                                        && solidMobsConfigData.bouncySlimes
-                                        && !entity.bypassesLandingEffects()) {
-                                    //bounceUp(entity);
-                                    cancel = true;
+                                    if ((cushion.getType().equals(EntityType.SLIME) || cushion.getType().equals(EntityType.MAGMA_CUBE))
+                                            && solidMobsConfigData.bouncySlimes
+                                            && !entity.bypassesLandingEffects()) {
+                                        //bounceUp(entity);
+                                        cancel = true;
 
-                                } else if (solidMobsConfigData.fallDamageSharedWithLandedOnMob) {
-                                    //just apply to first found no need to be picky
+                                    } else if (solidMobsConfigData.fallDamageSharedWithLandedOnMob) {
+                                        //just apply to first found no need to be picky
 
-                                    //get damage source incase of possible AI need to retaliate or flee damage source
-                                    DamageSource source;
-                                    DamageSources sources = entity.getDamageSources();
-                                    if (entity instanceof PlayerEntity plyr) {
-                                        source = sources.playerAttack(plyr);
-                                    } else if (entity instanceof LivingEntity alive) {
-                                        source = sources.mobAttack(alive);
-                                    } else {
-                                        source = sources.fall();
+                                        //get damage source incase of possible AI need to retaliate or flee damage source
+                                        DamageSource source;
+                                        DamageSources sources = entity.getDamageSources();
+                                        if (entity instanceof PlayerEntity plyr) {
+                                            source = sources.playerAttack(plyr);
+                                        } else if (entity instanceof LivingEntity alive) {
+                                            source = sources.mobAttack(alive);
+                                        } else {
+                                            source = sources.fall();
+                                        }
+                                        entity.handleFallDamage(fallDistance, 1.0F - solidMobsConfigData.getFallAbsorbAmount(), sources.fall());
+                                        cushion.handleFallDamage(fallDistance, solidMobsConfigData.getFallAbsorbAmount(), source);
+                                        cancel = true;
                                     }
-                                    entity.handleFallDamage(fallDistance, 1.0F - solidMobsConfigData.getFallAbsorbAmount(), sources.fall());
-                                    cushion.handleFallDamage(fallDistance, solidMobsConfigData.getFallAbsorbAmount(), source);
-                                    cancel = true;
-                                }
 
+                                }
                             }
+                        } catch (Exception ignored) {
+                            //
                         }
-                    }catch(Exception e){
-                        //
                     }
                 }
-            }
-            if (cancel) {
-                ci.cancel();
+                if (cancel) {
+                    ci.cancel();
+                }
+            }catch (Exception ignored){
             }
         }
     }
@@ -111,6 +115,7 @@ public abstract class MixinBlock {
 
 
     //copy of vanilla slimeblock bounce code modified to only change velocity vertically
+    @Unique
     private void bounceUp(Entity entity) {
         Vec3d vec3d = entity.getVelocity();
         if (vec3d.y < 0.0D) {

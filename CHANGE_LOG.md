@@ -1,5 +1,17 @@
 Solid mobs change-log
 
+
+- added commands for all config settings to allow tweaking in-game *(server usage requires operator permissions)*.
+- added `collisionBlacklist` command to tweak what collisions are enabled in-game.
+- added `getRecentCollisions` command to list recent entity collisions to aid with identifying and blacklisting unwanted collisions.
+- added `platformMode` option when true mobs will only collide on their top side, and you can press crouch to fall through them like a platform.
+- added `canNonSavingEntitesCollide` option to control collisions with non-saving/null entities *(occasionally used in mods for decorative or logical purposes, like `wall jump`)*.
+- added `falling_block` entities to the hard coded blacklist, various reasons/issues.
+- fixed a crash when trying to shove an entity after it has been removed.
+- fixed a crash when certain entities landed on others.
+  //todo test forge commands work
+
+
 ## V1.6
 - added forge support
 - added `entityCollisionBlacklist` in the config file which lets you blacklist certain mobs from having collisions, supports modded entities, formatted like:

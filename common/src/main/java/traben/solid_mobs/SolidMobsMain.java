@@ -2,6 +2,7 @@ package traben.solid_mobs;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import it.unimi.dsi.fastutil.objects.Object2BooleanLinkedOpenHashMap;
 import net.minecraft.entity.EntityType;
 import net.minecraft.util.Identifier;
 import traben.solid_mobs.config.Config;
@@ -12,7 +13,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
-public class solidMobsMain {
+public class SolidMobsMain {
 
     public static Config solidMobsConfigData;
 
@@ -30,6 +31,8 @@ public class solidMobsMain {
     }
 
     public static void resetExemptions(){
+        COLLISION_HISTORY.clear();
+        EXEMPT_ENTITIES.clear();
         EXEMPT_ENTITIES.add(EntityType.VEX.toString());
         if(!solidMobsConfigData.allowItemCollisions)
             EXEMPT_ENTITIES.add(EntityType.ITEM.toString());
@@ -64,6 +67,7 @@ public class solidMobsMain {
             EXEMPT_ENTITIES.add(EntityType.ITEM_FRAME.toString());
             EXEMPT_ENTITIES.add(EntityType.GLOW_ITEM_FRAME.toString());
         //}
+        EXEMPT_ENTITIES.add(EntityType.FALLING_BLOCK.toString());
 
         EXEMPT_ENTITIES.addAll(Arrays.asList(solidMobsConfigData.entityCollisionBlacklist));
 
@@ -97,7 +101,7 @@ public class solidMobsMain {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         if (!config.getParentFile().exists()) {
             //noinspection ResultOfMethodCallIgnored
-            config.getParentFile().mkdir();
+            config.getParentFile().mkdirs();
         }
         try {
             FileWriter fileWriter = new FileWriter(config);
@@ -109,6 +113,41 @@ public class solidMobsMain {
     }
 
 
+    public static Object2BooleanLinkedOpenHashMap<CollisionEvent> COLLISION_HISTORY = new Object2BooleanLinkedOpenHashMap<>();
 
+
+    public static void registerCollision(String entity1,String entity2,boolean result){
+        CollisionEvent event = new CollisionEvent(entity1,entity2);
+        COLLISION_HISTORY.putAndMoveToLast(event,result);
+        if (COLLISION_HISTORY.size() > 64) {
+            COLLISION_HISTORY.removeFirstBoolean();
+        }
+    }
+
+    public record CollisionEvent(String first,String second){
+        @Override
+        public String toString() {
+            return "[" +
+                    first +
+                    " -> " + second +
+                    "]";
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            //wont occur
+            // if (this == o) return true;
+
+            if (o == null || getClass() != o.getClass()) return false;
+            CollisionEvent that = (CollisionEvent) o;
+            return (Objects.equals(first, that.first) && Objects.equals(second, that.second))
+                    || (Objects.equals(second, that.first) && Objects.equals(first, that.second));
+        }
+
+        @Override
+        public int hashCode() {
+            return  first.hashCode()+second.hashCode(); //Objects.hash(first, second);
+        }
+    }
 
 }
