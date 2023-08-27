@@ -28,11 +28,12 @@ import static traben.solid_mobs.SolidMobsMain.solidMobsConfigData;
 public abstract class MixinBlock {
 
 
-    @Shadow public abstract BlockState getDefaultState();
+    @Shadow
+    public abstract BlockState getDefaultState();
 
     @Inject(method = "onLandedUpon", cancellable = true, at = @At("HEAD"))
     private void etf$fallDamageRedirect(World world, BlockState state, BlockPos pos, Entity entity, float fallDistance, CallbackInfo ci) {
-        if(solidMobsConfigData.canUseMod(world)) {
+        if (solidMobsConfigData.canUseMod(world)) {
             try {
                 boolean cancel = false;
                 if (state == null)
@@ -55,7 +56,7 @@ public abstract class MixinBlock {
                                     } else if (solidMobsConfigData.fallDamageSharedWithLandedOnMob) {
                                         //just apply to first found no need to be picky
 
-                                        //get damage source incase of possible AI need to retaliate or flee damage source
+                                        //get damage source in case of possible AI need to retaliate or flee damage source
                                         DamageSource source;
                                         DamageSources sources = entity.getDamageSources();
                                         if (entity instanceof PlayerEntity plyr) {
@@ -80,14 +81,14 @@ public abstract class MixinBlock {
                 if (cancel) {
                     ci.cancel();
                 }
-            }catch (Exception ignored){
+            } catch (Exception ignored) {
             }
         }
     }
 
     @Inject(method = "onEntityLand", cancellable = true, at = @At("HEAD"))
     private void etf$bounceRedirect(BlockView world, Entity entity, CallbackInfo ci) {
-        if(solidMobsConfigData.canUseMod(entity.getWorld())) {
+        if (solidMobsConfigData.canUseMod(entity.getWorld())) {
             if (this.getDefaultState().isOf(Blocks.AIR) || this.getDefaultState().isOf(Blocks.CAVE_AIR) || this.getDefaultState().isOf(Blocks.VOID_AIR)) {
                 if (solidMobsConfigData.bouncySlimes) {
                     //vanilla assumes fall is always into block find and entity to halve fall damage to
@@ -99,13 +100,13 @@ public abstract class MixinBlock {
 //                                    fellOnEntities) {
                                 if ((cushion.getType().equals(EntityType.SLIME) || cushion.getType().equals(EntityType.MAGMA_CUBE))
                                         && !entity.bypassesLandingEffects()) {
-                                    bounceUp(entity);
+                                    sm$bounceUp(entity);
                                     ci.cancel();
                                     break;
                                 }
                             }
                         }
-                    }catch(Exception e){
+                    } catch (Exception e) {
                         //
                     }
                 }
@@ -116,11 +117,11 @@ public abstract class MixinBlock {
 
     //copy of vanilla slimeblock bounce code modified to only change velocity vertically
     @Unique
-    private void bounceUp(Entity entity) {
+    private void sm$bounceUp(Entity entity) {
         Vec3d vec3d = entity.getVelocity();
         if (vec3d.y < 0.0D) {
             double d = entity instanceof LivingEntity ? 1.0D : 0.8D;
-            entity.setVelocity(vec3d.x,  Math.max(-vec3d.y,vec3d.y) * d, vec3d.z);
+            entity.setVelocity(vec3d.x, Math.max(-vec3d.y, vec3d.y) * d, vec3d.z);
         }
 
     }

@@ -7,7 +7,7 @@ import traben.solid_mobs.SolidMobsMain;
 public class ForgePacketHandler {
     private static final String PROTOCOL_VERSION = "1";
     public static final SimpleChannel INSTANCE = NetworkRegistry.newSimpleChannel(
-            SolidMobsMain.serverConfigPacketID,
+            SolidMobsMain.SERVER_CONFIG_PACKET_ID,
             () -> PROTOCOL_VERSION,
             PROTOCOL_VERSION::equals,
             PROTOCOL_VERSION::equals

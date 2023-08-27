@@ -3,8 +3,11 @@ package traben.solid_mobs;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import it.unimi.dsi.fastutil.objects.Object2BooleanLinkedOpenHashMap;
+import it.unimi.dsi.fastutil.objects.Object2BooleanOpenHashMap;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.util.Identifier;
+import traben.solid_mobs.client.SolidMobsClient;
 import traben.solid_mobs.config.Config;
 
 import java.io.File;
@@ -19,10 +22,10 @@ public class SolidMobsMain {
 
     public static HashSet<String> EXEMPT_ENTITIES = new HashSet<>();
 
-    public static final Identifier serverConfigPacketID = new Identifier("traben_solid_mobs:server_config_packet");
+    public static final Identifier SERVER_CONFIG_PACKET_ID = new Identifier("traben_solid_mobs:server_config_packet");
 
-    public static final HashMap<UUID, Long> lastPushTime = new HashMap<>();
-   // public static final HashMap<UUID, Long> lastAttackTime = new HashMap<>();
+    public static final HashMap<UUID, Long> LAST_PUSH_TIME = new HashMap<>();
+    // public static final HashMap<UUID, Long> lastAttackTime = new HashMap<>();
 
 
     public static void init() {
@@ -30,22 +33,23 @@ public class SolidMobsMain {
         //resetExemptions();
     }
 
-    public static void resetExemptions(){
+    public static void resetExemptions() {
+        EXEMPT_CACHE.clear();
         COLLISION_HISTORY.clear();
         EXEMPT_ENTITIES.clear();
         EXEMPT_ENTITIES.add(EntityType.VEX.toString());
-        if(!solidMobsConfigData.allowItemCollisions)
+        if (!solidMobsConfigData.allowItemCollisions)
             EXEMPT_ENTITIES.add(EntityType.ITEM.toString());
         EXEMPT_ENTITIES.add(EntityType.ARROW.toString());
         EXEMPT_ENTITIES.add(EntityType.SPECTRAL_ARROW.toString());
         EXEMPT_ENTITIES.add(EntityType.AREA_EFFECT_CLOUD.toString());
         EXEMPT_ENTITIES.add(EntityType.EXPERIENCE_ORB.toString());
 
-        if(!solidMobsConfigData.allowVillagerCollisions) {
+        if (!solidMobsConfigData.allowVillagerCollisions) {
             EXEMPT_ENTITIES.add(EntityType.VILLAGER.toString());
         }
 
-        if(!solidMobsConfigData.allowPetCollisions) {
+        if (!solidMobsConfigData.allowPetCollisions) {
             EXEMPT_ENTITIES.add(EntityType.WOLF.toString());
             EXEMPT_ENTITIES.add(EntityType.CAT.toString());
             EXEMPT_ENTITIES.add(EntityType.PARROT.toString());
@@ -63,17 +67,44 @@ public class SolidMobsMain {
         EXEMPT_ENTITIES.add(EntityType.TRIDENT.toString());
         EXEMPT_ENTITIES.add(EntityType.WITHER_SKULL.toString());
         //if(!solidMobsConfigData.allowPaintingAndItemFrameCollisions) {
-            EXEMPT_ENTITIES.add(EntityType.PAINTING.toString());
-            EXEMPT_ENTITIES.add(EntityType.ITEM_FRAME.toString());
-            EXEMPT_ENTITIES.add(EntityType.GLOW_ITEM_FRAME.toString());
+        EXEMPT_ENTITIES.add(EntityType.PAINTING.toString());
+        EXEMPT_ENTITIES.add(EntityType.ITEM_FRAME.toString());
+        EXEMPT_ENTITIES.add(EntityType.GLOW_ITEM_FRAME.toString());
         //}
         EXEMPT_ENTITIES.add(EntityType.FALLING_BLOCK.toString());
 
+        EXEMPT_ENTITIES.add(EntityType.MARKER.toString());
+        EXEMPT_ENTITIES.add(EntityType.BLOCK_DISPLAY.toString());
+        EXEMPT_ENTITIES.add(EntityType.ITEM_DISPLAY.toString());
+        EXEMPT_ENTITIES.add(EntityType.TEXT_DISPLAY.toString());
+        EXEMPT_ENTITIES.add(EntityType.INTERACTION.toString());
+
         EXEMPT_ENTITIES.addAll(Arrays.asList(solidMobsConfigData.entityCollisionBlacklist));
+
+
+        //no player types in return list this is handled by player on player collisions
+        // players being in this list will cause any collision against the player to fail
+        String player = EntityType.PLAYER.toString();
+        if (EXEMPT_ENTITIES.contains(player)) EXEMPT_ENTITIES.removeIf((val) -> Objects.equals(val, player));
 
     }
 
+    public static final Object2BooleanOpenHashMap<EntityType<?>> EXEMPT_CACHE = new Object2BooleanOpenHashMap<>();
+    public static boolean isExemptEntity(Entity entity){
+        return isExemptType(entity.getType());
+    }
+    public static boolean isExemptType(EntityType<?> entityType){
+        //hashmap faster
+        if(EXEMPT_CACHE.containsKey(entityType)){
+            return EXEMPT_CACHE.getBoolean(entityType);
+        }
+        boolean value = EXEMPT_ENTITIES.contains(entityType.toString());
+        EXEMPT_CACHE.put(entityType,value);
+        return value;
+    }
+
     public static void sm$loadConfig() {
+        SolidMobsClient.haveServerConfig = false;
         File config = new File(SolidMobsCrossPlatformHelper.getConfigDirectory().toFile(), "solid_mobs.json");
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         if (config.exists()) {
@@ -87,44 +118,42 @@ public class SolidMobsMain {
             }
         } else {
             solidMobsConfigData = new Config();
-
         }
-        //if(FabricLoader.getInstance().isModLoaded("walljump")) {
-        //    System.out.println("Solid mobs detected the 'walljump' mod, invisible collisions forcibly enabled for compatibility");
-        //    solidMobsConfigData.allowInvisibleCollisions = true;
-        //}
         saveConfig();
         resetExemptions();
     }
+
     public static void saveConfig() {
-        File config = new File(SolidMobsCrossPlatformHelper.getConfigDirectory().toFile(), "solid_mobs.json");
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        if (!config.getParentFile().exists()) {
-            //noinspection ResultOfMethodCallIgnored
-            config.getParentFile().mkdirs();
-        }
-        try {
-            FileWriter fileWriter = new FileWriter(config);
-            fileWriter.write(gson.toJson(solidMobsConfigData));
-            fileWriter.close();
-        } catch (IOException e) {
-            //logError("Config file could not be saved", false);
+        if (!SolidMobsClient.haveServerConfig) {
+            File config = new File(SolidMobsCrossPlatformHelper.getConfigDirectory().toFile(), "solid_mobs.json");
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            if (!config.getParentFile().exists()) {
+                //noinspection ResultOfMethodCallIgnored
+                config.getParentFile().mkdirs();
+            }
+            try {
+                FileWriter fileWriter = new FileWriter(config);
+                fileWriter.write(gson.toJson(solidMobsConfigData));
+                fileWriter.close();
+            } catch (IOException e) {
+                //logError("Config file could not be saved", false);
+            }
         }
     }
 
 
-    public static Object2BooleanLinkedOpenHashMap<CollisionEvent> COLLISION_HISTORY = new Object2BooleanLinkedOpenHashMap<>();
+    public static final Object2BooleanLinkedOpenHashMap<CollisionEvent> COLLISION_HISTORY = new Object2BooleanLinkedOpenHashMap<>();
 
 
-    public static void registerCollision(String entity1,String entity2,boolean result){
-        CollisionEvent event = new CollisionEvent(entity1,entity2);
-        COLLISION_HISTORY.putAndMoveToLast(event,result);
+    public static void registerCollision(String entity1, String entity2, boolean result) {
+        CollisionEvent event = new CollisionEvent(entity1, entity2);
+        COLLISION_HISTORY.putAndMoveToLast(event, result);
         if (COLLISION_HISTORY.size() > 64) {
             COLLISION_HISTORY.removeFirstBoolean();
         }
     }
 
-    public record CollisionEvent(String first,String second){
+    public record CollisionEvent(String first, String second) {
         @Override
         public String toString() {
             return "[" +
@@ -146,7 +175,7 @@ public class SolidMobsMain {
 
         @Override
         public int hashCode() {
-            return  first.hashCode()+second.hashCode(); //Objects.hash(first, second);
+            return first.hashCode() + second.hashCode(); //Objects.hash(first, second);
         }
     }
 

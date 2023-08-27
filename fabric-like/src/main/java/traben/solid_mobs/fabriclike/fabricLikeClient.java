@@ -2,7 +2,7 @@ package traben.solid_mobs.fabriclike;
 
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import traben.solid_mobs.SolidMobsMain;
-import traben.solid_mobs.client.solidMobsClient;
+import traben.solid_mobs.client.SolidMobsClient;
 import traben.solid_mobs.config.Config;
 
 import java.nio.charset.Charset;
@@ -14,7 +14,7 @@ import static traben.solid_mobs.SolidMobsMain.solidMobsConfigData;
 public class fabricLikeClient {
 
     public static void init(){
-            ClientPlayNetworking.registerGlobalReceiver(SolidMobsMain.serverConfigPacketID, (client, handler, buf, responseSender) -> {
+            ClientPlayNetworking.registerGlobalReceiver(SolidMobsMain.SERVER_CONFIG_PACKET_ID, (client, handler, buf, responseSender) -> {
                 //create server config
                 System.out.println("[Solid mobs] - Server Config data received and synced");
                 solidMobsConfigData = new Config();
@@ -43,7 +43,7 @@ public class fabricLikeClient {
                 //////////////////////////////////////////////////////
                 EXEMPT_ENTITIES = new HashSet<>();
                 SolidMobsMain.resetExemptions();
-                solidMobsClient.haveServerConfig = true;
+                SolidMobsClient.haveServerConfig = true;
             });
         }
 

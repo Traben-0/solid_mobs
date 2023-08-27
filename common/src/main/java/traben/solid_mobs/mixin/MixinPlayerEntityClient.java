@@ -14,12 +14,11 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import static traben.solid_mobs.SolidMobsMain.lastPushTime;
+import static traben.solid_mobs.SolidMobsMain.LAST_PUSH_TIME;
 import static traben.solid_mobs.SolidMobsMain.solidMobsConfigData;
 
 @Mixin(PlayerEntity.class)
 public abstract class MixinPlayerEntityClient extends LivingEntity {
-
 
 
     protected MixinPlayerEntityClient(EntityType<? extends LivingEntity> entityType, World world) {
@@ -27,17 +26,16 @@ public abstract class MixinPlayerEntityClient extends LivingEntity {
     }
 
 
-
     @Inject(method = "interact", at = @At("HEAD"))
-    private void sm$tryPush(Entity entity, Hand hand, CallbackInfoReturnable<ActionResult> cir) {
+    private void sm$tryPushClient(Entity entity, Hand hand, CallbackInfoReturnable<ActionResult> cir) {
         if (solidMobsConfigData.canUseMod(this.getWorld())
                 && entity instanceof LivingEntity alive
                 && solidMobsConfigData.allowShovingMobs
 
         ) {
-            if(isSneaking()) {
-                if (lastPushTime.containsKey(getUuid())) {
-                    if (lastPushTime.get(getUuid()) + solidMobsConfigData.shoveAgainTimeInTicks < world.getTime()) {
+            if (isSneaking()) {
+                if (LAST_PUSH_TIME.containsKey(getUuid())) {
+                    if (LAST_PUSH_TIME.get(getUuid()) + solidMobsConfigData.shoveAgainTimeInTicks < getWorld().getTime()) {
                         sm$pushThisClient(alive);
                     }
                 } else {
@@ -47,13 +45,13 @@ public abstract class MixinPlayerEntityClient extends LivingEntity {
         }
     }
 
-    
+
     @Unique
-    private void sm$pushThisClient(LivingEntity entity){
-        if (distanceTo(entity) < 2.5){
-                if (MinecraftClient.getInstance().player != null){
-                    MinecraftClient.getInstance().player.swingHand(Hand.MAIN_HAND);
-                }
+    private void sm$pushThisClient(LivingEntity entity) {
+        if (distanceTo(entity) < 2.5) {
+            if (MinecraftClient.getInstance().player != null) {
+                MinecraftClient.getInstance().player.swingHand(Hand.MAIN_HAND);
+            }
         }
     }
 

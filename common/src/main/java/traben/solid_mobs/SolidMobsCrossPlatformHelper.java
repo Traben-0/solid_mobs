@@ -5,6 +5,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 
 import java.nio.file.Path;
 
+@SuppressWarnings({"EmptyMethod","unused"})
 public class SolidMobsCrossPlatformHelper {
 
     @ExpectPlatform
@@ -12,7 +13,8 @@ public class SolidMobsCrossPlatformHelper {
         return Path.of("");
     }
 
+
     @ExpectPlatform
-    public static void sendConfigToClient(@SuppressWarnings("unused") ServerPlayerEntity player){}
+    public static void sendConfigToClient(ServerPlayerEntity player) {}
 
 }

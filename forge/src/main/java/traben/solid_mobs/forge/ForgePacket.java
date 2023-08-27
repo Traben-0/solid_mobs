@@ -5,7 +5,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.network.NetworkEvent;
 import traben.solid_mobs.SolidMobsMain;
-import traben.solid_mobs.client.solidMobsClient;
+import traben.solid_mobs.client.SolidMobsClient;
 import traben.solid_mobs.config.Config;
 
 import java.nio.charset.Charset;
@@ -139,7 +139,7 @@ public class ForgePacket
             ///////////////////////////////////////////////
             EXEMPT_ENTITIES = new HashSet<>();
             SolidMobsMain.resetExemptions();
-            solidMobsClient.haveServerConfig = true;
+            SolidMobsClient.haveServerConfig = true;
             System.out.println("[Solid mobs] - Server Config data received and synced");
         }else{
             System.out.println("[Solid mobs] - Server Config data received and failed to sync\n solids mobs will be disabled");

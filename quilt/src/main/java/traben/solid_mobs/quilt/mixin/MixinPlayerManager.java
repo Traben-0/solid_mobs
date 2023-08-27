@@ -49,7 +49,7 @@ public abstract class MixinPlayerManager {
 
         ///////////////////////////////////////////////////
 
-        ServerPlayNetworking.send(player, SolidMobsMain.serverConfigPacketID, buf);
+        ServerPlayNetworking.send(player, SolidMobsMain.SERVER_CONFIG_PACKET_ID, buf);
 
 
     }

@@ -15,43 +15,55 @@ import traben.solid_mobs.SolidMobsMain;
 
 import java.util.List;
 
-import static traben.solid_mobs.SolidMobsMain.EXEMPT_ENTITIES;
 import static traben.solid_mobs.SolidMobsMain.solidMobsConfigData;
 
 @Mixin(Entity.class)
 public abstract class MixinEntity {
 
-    @Shadow public abstract EntityType<?> getType();
+    @Shadow
+    public abstract EntityType<?> getType();
 
-    @Shadow public abstract boolean isInvisible();
+    @Shadow
+    public abstract boolean isInvisible();
 
-    @Shadow public abstract World getEntityWorld();
+    @Shadow
+    public abstract World getEntityWorld();
 
-    @Shadow private Box boundingBox;
+    @Shadow
+    private Box boundingBox;
 
-    @Shadow public abstract Vec3d getVelocity();
+    @Shadow
+    public abstract Vec3d getVelocity();
 
-    @Shadow public abstract double getY();
+    @Shadow
+    public abstract double getY();
 
-    @Shadow public abstract Vec3d getPos();
+    @Shadow
+    public abstract Vec3d getPos();
 
-    @Shadow public abstract float getHeight();
+    @Shadow
+    public abstract float getHeight();
 
-    @Shadow public abstract World getWorld();
+    @Shadow
+    public abstract World getWorld();
 
-    @Shadow public abstract boolean isConnectedThroughVehicle(Entity entity);
+    @Shadow
+    public abstract boolean isAlive();
 
-    @Shadow public abstract boolean isAlive();
+    @Shadow
+    public abstract boolean isLiving();
 
-    @Shadow public abstract boolean isLiving();
+
+    @Shadow
+    public abstract boolean isSneaking();
 
 
-    @Shadow public abstract boolean isSneaking();
-
+    @Shadow
+    public abstract boolean isPlayer();
 
     @Inject(method = "isCollidable", cancellable = true, at = @At("RETURN"))
     private void sm$collisionOverride(CallbackInfoReturnable<Boolean> cir) {
-        if(solidMobsConfigData.canUseMod(this.getWorld())) {
+        if (!cir.getReturnValue() && solidMobsConfigData.canUseMod(this.getWorld())) {
             if (this.isLiving()) {
                 //System.out.println(getType().toString());
                 //14:58:14.077
@@ -66,15 +78,15 @@ public abstract class MixinEntity {
 
                 //ignore if in exemption list
                 //lets ignore invis stuff, could be problematic with some builds
-                if (EXEMPT_ENTITIES.contains(getType().toString())) {
+                if (SolidMobsMain.isExemptType(getType())) {
                     //System.out.println("true for "+getName().getString());
                     returnValue = false;
                 } else {//return false if invisible
-                    if(!solidMobsConfigData.allowNonSavingEntityCollisions && !getType().isSaveable() && !getType().equals(EntityType.PLAYER)){
+                    if (!solidMobsConfigData.allowNonSavingEntityCollisions && !getType().isSaveable() && !getType().equals(EntityType.PLAYER)) {
                         returnValue = false;
-                    }else if(solidMobsConfigData.allowInvisibleCollisions){
+                    } else if (solidMobsConfigData.allowInvisibleCollisions) {
                         returnValue = isAlive();
-                    }else{
+                    } else {
                         returnValue = isAlive() && !isInvisible();
                     }
                     //returnValue = isAlive() && !(!solidMobsConfigData.allowInvisibleCollisions && isInvisible());
@@ -88,43 +100,34 @@ public abstract class MixinEntity {
     private void sm$collisionOverride(Entity other, CallbackInfoReturnable<Boolean> cir) {
         if (solidMobsConfigData.canUseMod(this.getWorld())) {
             boolean collides = cir.getReturnValue();
-            if (EXEMPT_ENTITIES.contains(getType().toString()) || EXEMPT_ENTITIES.contains(other.getType().toString())) {
+            EntityType<?> thisType = getType();
+            if (SolidMobsMain.isExemptType(thisType)) { // || EXEMPT_ENTITIES.contains(other.getType().toString())) {
                 collides = false;
-            } else if (this.isLiving() && other.isLiving()) {
-                if (getType().equals(EntityType.PLAYER) && other.getType().equals(EntityType.PLAYER)) {
-                    //only affect player on player collisions we still need other things to collide with players so PLAYER cannot be in exempt list
-                    if (solidMobsConfigData.allowPlayerCollisions) {
-                        collides = !isConnectedThroughVehicle(other);
-                    } else {
-                        collides = false;
-                    }
-                }
+            } else if (isPlayer() && other.isPlayer() && !solidMobsConfigData.allowPlayerCollisions) {
+                //only affect player on player collisions we still need other things to collide with players so PLAYER cannot be in exempt list
+                collides = false;
             }
-            if(solidMobsConfigData.platformMode && collides){
-                if(isSneaking()){
-                    SolidMobsMain.registerCollision(getType().toString(),other.getType().toString(),false);
+            if (solidMobsConfigData.platformMode && collides) {
+                if (isSneaking()) {
+                    SolidMobsMain.registerCollision(thisType.toString(), other.getType().toString(), false);
                     cir.setReturnValue(false);
-                }else {
+                } else {
                     collides = getY() + 0.01 >= other.getY() + other.getBoundingBox().getYLength();
-                    SolidMobsMain.registerCollision(getType().toString(), other.getType().toString(), collides);
+                    SolidMobsMain.registerCollision(thisType.toString(), other.getType().toString(), collides);
                     cir.setReturnValue(collides);
                 }
-            }else {
-                SolidMobsMain.registerCollision(getType().toString(), other.getType().toString(), collides);
+            } else {
+                SolidMobsMain.registerCollision(thisType.toString(), other.getType().toString(), collides);
                 cir.setReturnValue(collides);
             }
         }
     }
 
 
-
-
-
-
     @Inject(method = "tick", at = @At("TAIL"))
     private void sm$moveWalkingRider(CallbackInfo ci) {
-        if(solidMobsConfigData.canUseMod(this.getWorld()) && this.isLiving()) {
-            if (!EXEMPT_ENTITIES.contains(getType().toString())) {
+        if (solidMobsConfigData.canUseMod(this.getWorld()) && this.isLiving()) {
+            if (!SolidMobsMain.isExemptType(getType())) {
 
                 if ((!getType().equals(EntityType.SLIME) && !getType().equals(EntityType.MAGMA_CUBE)) || !solidMobsConfigData.bouncySlimes) {//move with mob
                     try {
@@ -143,7 +146,7 @@ public abstract class MixinEntity {
                                 ) {
                                     //apply movement to this mob
                                     if (possibleStandingMob.isSneaking()) {
-                                        if(!solidMobsConfigData.platformMode){
+                                        if (!solidMobsConfigData.platformMode) {
                                             //if sneaking snap player to centre of mob
                                             // prevents falling off cause sneaking
                                             double modifyY;
@@ -166,7 +169,7 @@ public abstract class MixinEntity {
                                 }
                             }
                         }
-                    }catch(Exception e){
+                    } catch (Exception e) {
                         //
                     }
                 }// else {
@@ -185,9 +188,6 @@ public abstract class MixinEntity {
             }
         }
     }
-
-
-
 
 
 }
