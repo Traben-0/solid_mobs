@@ -2,9 +2,9 @@ Solid mobs change-log
 
 - improved general runtime efficiency.
 - Forge users can now join Fabric servers & have their settings sync correctly.*(Forge doesn't allow this the other way around :/)*
-- added commands for all config settings to allow tweaking in-game *(server usage requires operator permissions)*.
-- added `collisionBlacklist` command to tweak what collisions are enabled in-game.
-- added `getRecentCollisions` command to list recent entity collisions to aid with identifying and blacklisting unwanted collisions.
+- added `/solid_mobs` command with options for all config settings to allow tweaking in-game *(server usage requires operator permissions)*.
+- added `entityBlacklist` subcommand to tweak what collisions are enabled in-game.
+- added `listRecentCollisions` subcommand to list recent entity collisions to aid with identifying and blacklisting unwanted collisions.
 - added `platformMode` option when true mobs will only collide on their top side, and you can press crouch to fall through them like a platform.
 - added `canNonSavingEntitesCollide` option to control collisions with non-saving/null entities *(occasionally used in mods for decorative or logical purposes, like `wall jump`)*.
 - added `falling_block` entities to the hard coded blacklist, various reasons/issues.
