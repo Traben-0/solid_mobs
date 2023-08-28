@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import static traben.solid_mobs.SolidMobsMain.solidMobsConfigData;
+import static traben.solid_mobs.SolidMobsMain.solidMobsSolidMobsConfigData;
 
 @Mixin(MeleeAttackGoal.class)
 public abstract class MixinMeleeAttackGoal extends Goal {
@@ -49,7 +49,7 @@ public abstract class MixinMeleeAttackGoal extends Goal {
         if (this.cooldown <= 0) {
             //means we didn't attack and have cooled down
             try {
-                if (solidMobsConfigData.canUseMod(this.mob.getWorld())
+                if (solidMobsSolidMobsConfigData.canUseMod(this.mob.getWorld())
                         && this.mob.getWorld().getOtherEntities(this.mob, this.mob.getBoundingBox().expand(0.1)).contains(this.mob.getTarget())
                 ) {
                     this.resetCooldown();

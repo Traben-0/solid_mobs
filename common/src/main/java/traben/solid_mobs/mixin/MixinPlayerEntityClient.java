@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import static traben.solid_mobs.SolidMobsMain.LAST_PUSH_TIME;
-import static traben.solid_mobs.SolidMobsMain.solidMobsConfigData;
+import static traben.solid_mobs.SolidMobsMain.solidMobsSolidMobsConfigData;
 
 @Mixin(PlayerEntity.class)
 public abstract class MixinPlayerEntityClient extends LivingEntity {
@@ -28,14 +28,14 @@ public abstract class MixinPlayerEntityClient extends LivingEntity {
 
     @Inject(method = "interact", at = @At("HEAD"))
     private void sm$tryPushClient(Entity entity, Hand hand, CallbackInfoReturnable<ActionResult> cir) {
-        if (solidMobsConfigData.canUseMod(this.getWorld())
+        if (solidMobsSolidMobsConfigData.canUseMod(this.getWorld())
                 && entity instanceof LivingEntity alive
-                && solidMobsConfigData.allowShovingMobs
+                && solidMobsSolidMobsConfigData.allowShovingMobs
 
         ) {
             if (isSneaking()) {
                 if (LAST_PUSH_TIME.containsKey(getUuid())) {
-                    if (LAST_PUSH_TIME.get(getUuid()) + solidMobsConfigData.shoveAgainTimeInTicks < getWorld().getTime()) {
+                    if (LAST_PUSH_TIME.get(getUuid()) + solidMobsSolidMobsConfigData.shoveAgainTimeInTicks < getWorld().getTime()) {
                         sm$pushThisClient(alive);
                     }
                 } else {

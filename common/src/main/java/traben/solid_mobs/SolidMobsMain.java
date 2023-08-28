@@ -8,7 +8,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.util.Identifier;
 import traben.solid_mobs.client.SolidMobsClient;
-import traben.solid_mobs.config.Config;
+import traben.solid_mobs.config.SolidMobsConfig;
 
 import java.io.File;
 import java.io.FileReader;
@@ -18,7 +18,7 @@ import java.util.*;
 
 public class SolidMobsMain {
 
-    public static Config solidMobsConfigData;
+    public static SolidMobsConfig solidMobsSolidMobsConfigData;
 
     public static HashSet<String> EXEMPT_ENTITIES = new HashSet<>();
 
@@ -38,18 +38,18 @@ public class SolidMobsMain {
         COLLISION_HISTORY.clear();
         EXEMPT_ENTITIES.clear();
         EXEMPT_ENTITIES.add(EntityType.VEX.toString());
-        if (!solidMobsConfigData.allowItemCollisions)
+        if (!solidMobsSolidMobsConfigData.allowItemCollisions)
             EXEMPT_ENTITIES.add(EntityType.ITEM.toString());
         EXEMPT_ENTITIES.add(EntityType.ARROW.toString());
         EXEMPT_ENTITIES.add(EntityType.SPECTRAL_ARROW.toString());
         EXEMPT_ENTITIES.add(EntityType.AREA_EFFECT_CLOUD.toString());
         EXEMPT_ENTITIES.add(EntityType.EXPERIENCE_ORB.toString());
 
-        if (!solidMobsConfigData.allowVillagerCollisions) {
+        if (!solidMobsSolidMobsConfigData.allowVillagerCollisions) {
             EXEMPT_ENTITIES.add(EntityType.VILLAGER.toString());
         }
 
-        if (!solidMobsConfigData.allowPetCollisions) {
+        if (!solidMobsSolidMobsConfigData.allowPetCollisions) {
             EXEMPT_ENTITIES.add(EntityType.WOLF.toString());
             EXEMPT_ENTITIES.add(EntityType.CAT.toString());
             EXEMPT_ENTITIES.add(EntityType.PARROT.toString());
@@ -79,7 +79,7 @@ public class SolidMobsMain {
         EXEMPT_ENTITIES.add(EntityType.TEXT_DISPLAY.toString());
         EXEMPT_ENTITIES.add(EntityType.INTERACTION.toString());
 
-        EXEMPT_ENTITIES.addAll(Arrays.asList(solidMobsConfigData.entityCollisionBlacklist));
+        EXEMPT_ENTITIES.addAll(Arrays.asList(solidMobsSolidMobsConfigData.entityCollisionBlacklist));
 
 
         //no player types in return list this is handled by player on player collisions
@@ -110,14 +110,14 @@ public class SolidMobsMain {
         if (config.exists()) {
             try {
                 FileReader fileReader = new FileReader(config);
-                solidMobsConfigData = gson.fromJson(fileReader, Config.class);
+                solidMobsSolidMobsConfigData = gson.fromJson(fileReader, SolidMobsConfig.class);
                 fileReader.close();
                 //saveConfig();
             } catch (IOException e) {
                 //ETFUtils.logMessage("Config could not be loaded, using defaults", false);
             }
         } else {
-            solidMobsConfigData = new Config();
+            solidMobsSolidMobsConfigData = new SolidMobsConfig();
         }
         saveConfig();
         resetExemptions();
@@ -133,7 +133,7 @@ public class SolidMobsMain {
             }
             try {
                 FileWriter fileWriter = new FileWriter(config);
-                fileWriter.write(gson.toJson(solidMobsConfigData));
+                fileWriter.write(gson.toJson(solidMobsSolidMobsConfigData));
                 fileWriter.close();
             } catch (IOException e) {
                 //logError("Config file could not be saved", false);

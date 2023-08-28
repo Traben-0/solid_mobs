@@ -1,11 +1,9 @@
 package traben.solid_mobs.forge;
 
-import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.loading.FMLEnvironment;
 import traben.solid_mobs.SolidMobsMain;
 import traben.solid_mobs.config.SolidMobsCommands;
 
@@ -14,19 +12,17 @@ public class SolidMobsForge {
     public SolidMobsForge() {
 
         ForgePacketHandler.init();
-
         SolidMobsMain.init();
-        if (FMLEnvironment.dist != Dist.CLIENT) {
-            //server
-            //EventBuses.registerModEventBus("solid_mobs", FMLJavaModLoadingContext.get().getModEventBus());
-            MinecraftForge.EVENT_BUS.register(this);
-
-
-        }
+        MinecraftForge.EVENT_BUS.register(SolidMobsForge.class);
+//        if (FMLEnvironment.dist != Dist.CLIENT) {
+//            //server
+//
+//        }
     }
 
     @SubscribeEvent
     public static void onRegisterCommandEvent(RegisterCommandsEvent event){
+        System.out.println("[Solid Mobs] commands registered");
         SolidMobsCommands.registerCommands(event.getDispatcher(),null,null);
     }
 

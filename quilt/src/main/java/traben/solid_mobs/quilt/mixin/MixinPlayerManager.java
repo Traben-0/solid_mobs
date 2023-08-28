@@ -15,7 +15,7 @@ import traben.solid_mobs.SolidMobsMain;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 
-import static traben.solid_mobs.SolidMobsMain.solidMobsConfigData;
+import static traben.solid_mobs.SolidMobsMain.solidMobsSolidMobsConfigData;
 
 @Mixin(PlayerManager.class)
 public abstract class MixinPlayerManager {
@@ -32,20 +32,20 @@ public abstract class MixinPlayerManager {
         System.out.println("[Solid Mobs] - Sending server config to ["+player.getName().getString()+"]");
         //PRESERVE WRITE ORDER IN READ
         /////////////////////////////////////////
-        buf.writeBoolean(solidMobsConfigData.allowItemCollisions);
-        buf.writeBoolean(solidMobsConfigData.allowPlayerCollisions);
-        buf.writeBoolean(solidMobsConfigData.allowPetCollisions);
-        buf.writeBoolean(solidMobsConfigData.bouncySlimes);
-        buf.writeBoolean(solidMobsConfigData.fallDamageSharedWithLandedOnMob);
-        buf.writeFloat(solidMobsConfigData.getFallAbsorbAmount());
+        buf.writeBoolean(solidMobsSolidMobsConfigData.allowItemCollisions);
+        buf.writeBoolean(solidMobsSolidMobsConfigData.allowPlayerCollisions);
+        buf.writeBoolean(solidMobsSolidMobsConfigData.allowPetCollisions);
+        buf.writeBoolean(solidMobsSolidMobsConfigData.bouncySlimes);
+        buf.writeBoolean(solidMobsSolidMobsConfigData.fallDamageSharedWithLandedOnMob);
+        buf.writeFloat(solidMobsSolidMobsConfigData.getFallAbsorbAmount());
         //buf.writeBoolean(solidMobsConfigData.allowPaintingAndItemFrameCollisions);
-        buf.writeBoolean(solidMobsConfigData.allowInvisibleCollisions);
-        buf.writeBoolean(solidMobsConfigData.allowShovingMobs);
-        buf.writeInt(solidMobsConfigData.shoveAgainTimeInTicks);
-        buf.writeBoolean(solidMobsConfigData.allowVillagerCollisions);
+        buf.writeBoolean(solidMobsSolidMobsConfigData.allowInvisibleCollisions);
+        buf.writeBoolean(solidMobsSolidMobsConfigData.allowShovingMobs);
+        buf.writeInt(solidMobsSolidMobsConfigData.shoveAgainTimeInTicks);
+        buf.writeBoolean(solidMobsSolidMobsConfigData.allowVillagerCollisions);
         ///////////////////////////////////////////////
-        buf.writeInt(Arrays.toString(solidMobsConfigData.entityCollisionBlacklist).length());
-        buf.writeCharSequence(Arrays.toString(solidMobsConfigData.entityCollisionBlacklist), Charset.defaultCharset());
+        buf.writeInt(Arrays.toString(solidMobsSolidMobsConfigData.entityCollisionBlacklist).length());
+        buf.writeCharSequence(Arrays.toString(solidMobsSolidMobsConfigData.entityCollisionBlacklist), Charset.defaultCharset());
 
         ///////////////////////////////////////////////////
 

@@ -1,6 +1,7 @@
 Solid mobs change-log
 
-
+- improved general runtime efficiency.
+- Forge users can now join Fabric servers & have their settings sync correctly.*(Forge doesn't allow this the other way around :/)*
 - added commands for all config settings to allow tweaking in-game *(server usage requires operator permissions)*.
 - added `collisionBlacklist` command to tweak what collisions are enabled in-game.
 - added `getRecentCollisions` command to list recent entity collisions to aid with identifying and blacklisting unwanted collisions.
@@ -9,7 +10,6 @@ Solid mobs change-log
 - added `falling_block` entities to the hard coded blacklist, various reasons/issues.
 - fixed a crash when trying to shove an entity after it has been removed.
 - fixed a crash when certain entities landed on others.
-  //todo test forge commands work
 
 
 ## V1.6

@@ -15,7 +15,7 @@ public class SolidMobsCrossPlatformHelperImpl {
 
     public static void sendConfigToClient(ServerPlayerEntity player){
         //PacketByteBuf buf = PacketByteBufs.create();
-        ForgePacketHandler.INSTANCE.send(PacketDistributor.PLAYER.with(()-> player),new ForgePacket());
+        ForgePacketHandler.INSTANCE.send(PacketDistributor.PLAYER.with(()-> player),new SolidMobsSolidMobsConfigPacket());
         System.out.println("[Solid Mobs] - Sending server config to ["+player.getName().getString()+"]");
         // ServerPlayNetworking.send(player, solidMobsMain.serverConfigPacketID, buf);
     }

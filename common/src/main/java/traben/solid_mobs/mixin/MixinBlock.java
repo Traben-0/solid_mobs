@@ -22,7 +22,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
 
-import static traben.solid_mobs.SolidMobsMain.solidMobsConfigData;
+import static traben.solid_mobs.SolidMobsMain.solidMobsSolidMobsConfigData;
 
 @Mixin(Block.class)
 public abstract class MixinBlock {
@@ -33,13 +33,13 @@ public abstract class MixinBlock {
 
     @Inject(method = "onLandedUpon", cancellable = true, at = @At("HEAD"))
     private void etf$fallDamageRedirect(World world, BlockState state, BlockPos pos, Entity entity, float fallDistance, CallbackInfo ci) {
-        if (solidMobsConfigData.canUseMod(world)) {
+        if (solidMobsSolidMobsConfigData.canUseMod(world)) {
             try {
                 boolean cancel = false;
                 if (state == null)
                     state = this.getDefaultState();
                 if (state.isOf(Blocks.AIR) || state.isOf(Blocks.CAVE_AIR) || state.isOf(Blocks.VOID_AIR)) {
-                    if (solidMobsConfigData.fallDamageSharedWithLandedOnMob || solidMobsConfigData.bouncySlimes) {
+                    if (solidMobsSolidMobsConfigData.fallDamageSharedWithLandedOnMob || solidMobsSolidMobsConfigData.bouncySlimes) {
                         //vanilla assumes fall is always into block find and entity to halve fall damage to
                         try {
                             List<Entity> fellOnEntities = world.getOtherEntities(entity, entity.getBoundingBox().offset(0, -0.5/*entity.getBoundingBox().getYLength()*/, 0));
@@ -48,12 +48,12 @@ public abstract class MixinBlock {
                                     //                            for (Entity cushion :
 //                                    fellOnEntities) {
                                     if ((cushion.getType().equals(EntityType.SLIME) || cushion.getType().equals(EntityType.MAGMA_CUBE))
-                                            && solidMobsConfigData.bouncySlimes
+                                            && solidMobsSolidMobsConfigData.bouncySlimes
                                             && !entity.bypassesLandingEffects()) {
                                         //bounceUp(entity);
                                         cancel = true;
 
-                                    } else if (solidMobsConfigData.fallDamageSharedWithLandedOnMob) {
+                                    } else if (solidMobsSolidMobsConfigData.fallDamageSharedWithLandedOnMob) {
                                         //just apply to first found no need to be picky
 
                                         //get damage source in case of possible AI need to retaliate or flee damage source
@@ -66,8 +66,8 @@ public abstract class MixinBlock {
                                         } else {
                                             source = sources.fall();
                                         }
-                                        entity.handleFallDamage(fallDistance, 1.0F - solidMobsConfigData.getFallAbsorbAmount(), sources.fall());
-                                        cushion.handleFallDamage(fallDistance, solidMobsConfigData.getFallAbsorbAmount(), source);
+                                        entity.handleFallDamage(fallDistance, 1.0F - solidMobsSolidMobsConfigData.getFallAbsorbAmount(), sources.fall());
+                                        cushion.handleFallDamage(fallDistance, solidMobsSolidMobsConfigData.getFallAbsorbAmount(), source);
                                         cancel = true;
                                     }
 
@@ -88,9 +88,9 @@ public abstract class MixinBlock {
 
     @Inject(method = "onEntityLand", cancellable = true, at = @At("HEAD"))
     private void etf$bounceRedirect(BlockView world, Entity entity, CallbackInfo ci) {
-        if (solidMobsConfigData.canUseMod(entity.getWorld())) {
+        if (solidMobsSolidMobsConfigData.canUseMod(entity.getWorld())) {
             if (this.getDefaultState().isOf(Blocks.AIR) || this.getDefaultState().isOf(Blocks.CAVE_AIR) || this.getDefaultState().isOf(Blocks.VOID_AIR)) {
-                if (solidMobsConfigData.bouncySlimes) {
+                if (solidMobsSolidMobsConfigData.bouncySlimes) {
                     //vanilla assumes fall is always into block find and entity to halve fall damage to
                     try {
                         List<Entity> fellOnEntities = entity.getWorld().getOtherEntities(entity, entity.getBoundingBox().offset(0, -0.5/*entity.getBoundingBox().getYLength()*/, 0));
