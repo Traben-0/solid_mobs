@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import static traben.solid_mobs.solidMobsMain.solidMobsConfigData;
+import static traben.solid_mobs.SolidMobsMain.solidMobsConfigData;
 
 @Mixin(MeleeAttackGoal.class)
 public abstract class MixinMeleeAttackGoal extends Goal {

@@ -1,9 +1,9 @@
 package traben.solid_mobs.fabriclike;
 
-import traben.solid_mobs.solidMobsMain;
+import traben.solid_mobs.SolidMobsMain;
 
 public class fabricLikeMain {
     public static void init() {
-        solidMobsMain.init();
+        SolidMobsMain.init();
     }
 }
