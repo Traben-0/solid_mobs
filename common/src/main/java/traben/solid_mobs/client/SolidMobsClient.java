@@ -1,6 +1,6 @@
 package traben.solid_mobs.client;
 
-public class solidMobsClient {
+public class SolidMobsClient {
 
     public static boolean haveServerConfig = false;
 

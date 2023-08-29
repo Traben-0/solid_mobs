@@ -10,12 +10,12 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import traben.solid_mobs.solidMobsMain;
+import traben.solid_mobs.SolidMobsMain;
 
 import java.nio.charset.Charset;
 import java.util.Arrays;
 
-import static traben.solid_mobs.solidMobsMain.solidMobsConfigData;
+import static traben.solid_mobs.SolidMobsMain.solidMobsConfigData;
 
 @Mixin(PlayerManager.class)
 public abstract class MixinPlayerManager {
@@ -26,6 +26,8 @@ public abstract class MixinPlayerManager {
     public void etf$sendPacketFromServer(ClientConnection connection, ServerPlayerEntity player, CallbackInfo ci) {
         //if (world.isClient()) return;
 
+
+        //todo deprecated now?
         PacketByteBuf buf = PacketByteBufs.create();
         System.out.println("[Solid Mobs] - Sending server config to ["+player.getName().getString()+"]");
         //PRESERVE WRITE ORDER IN READ
@@ -47,7 +49,7 @@ public abstract class MixinPlayerManager {
 
         ///////////////////////////////////////////////////
 
-        ServerPlayNetworking.send(player, solidMobsMain.serverConfigPacketID, buf);
+        ServerPlayNetworking.send(player, SolidMobsMain.SERVER_CONFIG_PACKET_ID, buf);
 
 
     }
