@@ -18,7 +18,7 @@ import java.util.*;
 
 public class SolidMobsMain {
 
-    public static SolidMobsConfig solidMobsSolidMobsConfigData;
+    public static SolidMobsConfig solidMobsConfigData;
 
     public static HashSet<String> EXEMPT_ENTITIES = new HashSet<>();
 
@@ -38,18 +38,18 @@ public class SolidMobsMain {
         COLLISION_HISTORY.clear();
         EXEMPT_ENTITIES.clear();
         EXEMPT_ENTITIES.add(EntityType.VEX.toString());
-        if (!solidMobsSolidMobsConfigData.allowItemCollisions)
+        if (!solidMobsConfigData.allowItemCollisions)
             EXEMPT_ENTITIES.add(EntityType.ITEM.toString());
         EXEMPT_ENTITIES.add(EntityType.ARROW.toString());
         EXEMPT_ENTITIES.add(EntityType.SPECTRAL_ARROW.toString());
         EXEMPT_ENTITIES.add(EntityType.AREA_EFFECT_CLOUD.toString());
         EXEMPT_ENTITIES.add(EntityType.EXPERIENCE_ORB.toString());
 
-        if (!solidMobsSolidMobsConfigData.allowVillagerCollisions) {
+        if (!solidMobsConfigData.allowVillagerCollisions) {
             EXEMPT_ENTITIES.add(EntityType.VILLAGER.toString());
         }
 
-        if (!solidMobsSolidMobsConfigData.allowPetCollisions) {
+        if (!solidMobsConfigData.allowPetCollisions) {
             EXEMPT_ENTITIES.add(EntityType.WOLF.toString());
             EXEMPT_ENTITIES.add(EntityType.CAT.toString());
             EXEMPT_ENTITIES.add(EntityType.PARROT.toString());
@@ -79,7 +79,7 @@ public class SolidMobsMain {
         EXEMPT_ENTITIES.add(EntityType.TEXT_DISPLAY.toString());
         EXEMPT_ENTITIES.add(EntityType.INTERACTION.toString());
 
-        EXEMPT_ENTITIES.addAll(Arrays.asList(solidMobsSolidMobsConfigData.entityCollisionBlacklist));
+        EXEMPT_ENTITIES.addAll(Arrays.asList(solidMobsConfigData.entityCollisionBlacklist));
 
 
         //no player types in return list this is handled by player on player collisions
@@ -110,14 +110,14 @@ public class SolidMobsMain {
         if (config.exists()) {
             try {
                 FileReader fileReader = new FileReader(config);
-                solidMobsSolidMobsConfigData = gson.fromJson(fileReader, SolidMobsConfig.class);
+                solidMobsConfigData = gson.fromJson(fileReader, SolidMobsConfig.class);
                 fileReader.close();
                 //saveConfig();
             } catch (IOException e) {
                 //ETFUtils.logMessage("Config could not be loaded, using defaults", false);
             }
         } else {
-            solidMobsSolidMobsConfigData = new SolidMobsConfig();
+            solidMobsConfigData = new SolidMobsConfig();
         }
         saveConfig();
         resetExemptions();
@@ -133,7 +133,7 @@ public class SolidMobsMain {
             }
             try {
                 FileWriter fileWriter = new FileWriter(config);
-                fileWriter.write(gson.toJson(solidMobsSolidMobsConfigData));
+                fileWriter.write(gson.toJson(solidMobsConfigData));
                 fileWriter.close();
             } catch (IOException e) {
                 //logError("Config file could not be saved", false);

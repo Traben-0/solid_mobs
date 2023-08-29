@@ -11,7 +11,7 @@ public class fabricLikeClient {
             ClientPlayNetworking.registerGlobalReceiver(SolidMobsMain.SERVER_CONFIG_PACKET_ID, (client, handler, buf, responseSender) -> {
                 //create server config
                 try {
-                    SolidMobsMain.solidMobsSolidMobsConfigData = new SolidMobsConfig(buf);
+                    SolidMobsMain.solidMobsConfigData = new SolidMobsConfig(buf);
                     SolidMobsMain.resetExemptions();
                     SolidMobsClient.haveServerConfig = true;
                     System.out.println("[Solid mobs] - Server Config data received and synced");

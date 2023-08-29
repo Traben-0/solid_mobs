@@ -10,7 +10,7 @@ import traben.solid_mobs.config.SolidMobsConfig;
 
 import java.util.function.Supplier;
 
-import static traben.solid_mobs.SolidMobsMain.solidMobsSolidMobsConfigData;
+import static traben.solid_mobs.SolidMobsMain.solidMobsConfigData;
 
 
 public class SolidMobsSolidMobsConfigPacket extends SolidMobsConfig
@@ -18,7 +18,7 @@ public class SolidMobsSolidMobsConfigPacket extends SolidMobsConfig
     // A class MessagePacket
     public void encoder(PacketByteBuf buffer) {
         // Write to buffer
-        solidMobsSolidMobsConfigData.encodeToByteBuffer(buffer);
+        solidMobsConfigData.encodeToByteBuffer(buffer);
     }
 
     SolidMobsSolidMobsConfigPacket(){}
@@ -55,7 +55,7 @@ public class SolidMobsSolidMobsConfigPacket extends SolidMobsConfig
     public void messageConsumer(Supplier<NetworkEvent.Context> ctx) {
         // Handle message
         if(is_valid) {
-            solidMobsSolidMobsConfigData = this;
+            solidMobsConfigData = this;
 
             SolidMobsMain.resetExemptions();
             SolidMobsClient.haveServerConfig = true;

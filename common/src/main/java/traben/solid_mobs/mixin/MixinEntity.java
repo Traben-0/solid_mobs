@@ -15,7 +15,7 @@ import traben.solid_mobs.SolidMobsMain;
 
 import java.util.List;
 
-import static traben.solid_mobs.SolidMobsMain.solidMobsSolidMobsConfigData;
+import static traben.solid_mobs.SolidMobsMain.solidMobsConfigData;
 
 @Mixin(Entity.class)
 public abstract class MixinEntity {
@@ -63,7 +63,7 @@ public abstract class MixinEntity {
 
     @Inject(method = "isCollidable", cancellable = true, at = @At("RETURN"))
     private void sm$collisionOverride(CallbackInfoReturnable<Boolean> cir) {
-        if (!cir.getReturnValue() && solidMobsSolidMobsConfigData.canUseMod(this.getWorld())) {
+        if (!cir.getReturnValue() && solidMobsConfigData.canUseMod(this.getWorld())) {
             if (this.isLiving()) {
                 //System.out.println(getType().toString());
                 //14:58:14.077
@@ -82,9 +82,9 @@ public abstract class MixinEntity {
                     //System.out.println("true for "+getName().getString());
                     returnValue = false;
                 } else {//return false if invisible
-                    if (!solidMobsSolidMobsConfigData.allowNonSavingEntityCollisions && !getType().isSaveable() && !getType().equals(EntityType.PLAYER)) {
+                    if (!solidMobsConfigData.allowNonSavingEntityCollisions && !getType().isSaveable() && !getType().equals(EntityType.PLAYER)) {
                         returnValue = false;
-                    } else if (solidMobsSolidMobsConfigData.allowInvisibleCollisions) {
+                    } else if (solidMobsConfigData.allowInvisibleCollisions) {
                         returnValue = isAlive();
                     } else {
                         returnValue = isAlive() && !isInvisible();
@@ -98,16 +98,16 @@ public abstract class MixinEntity {
 
     @Inject(method = "collidesWith", cancellable = true, at = @At("RETURN"))
     private void sm$collisionOverride(Entity other, CallbackInfoReturnable<Boolean> cir) {
-        if (solidMobsSolidMobsConfigData.canUseMod(this.getWorld())) {
+        if (solidMobsConfigData.canUseMod(this.getWorld())) {
             boolean collides = cir.getReturnValue();
             EntityType<?> thisType = getType();
             if (SolidMobsMain.isExemptType(thisType)) { // || EXEMPT_ENTITIES.contains(other.getType().toString())) {
                 collides = false;
-            } else if (isPlayer() && other.isPlayer() && !solidMobsSolidMobsConfigData.allowPlayerCollisions) {
+            } else if (isPlayer() && other.isPlayer() && !solidMobsConfigData.allowPlayerCollisions) {
                 //only affect player on player collisions we still need other things to collide with players so PLAYER cannot be in exempt list
                 collides = false;
             }
-            if (solidMobsSolidMobsConfigData.platformMode && collides) {
+            if (solidMobsConfigData.platformMode && collides) {
                 if (isSneaking()) {
                     SolidMobsMain.registerCollision(thisType.toString(), other.getType().toString(), false);
                     cir.setReturnValue(false);
@@ -126,10 +126,10 @@ public abstract class MixinEntity {
 
     @Inject(method = "tick", at = @At("TAIL"))
     private void sm$moveWalkingRider(CallbackInfo ci) {
-        if (solidMobsSolidMobsConfigData.canUseMod(this.getWorld()) && this.isLiving()) {
+        if (solidMobsConfigData.canUseMod(this.getWorld()) && this.isLiving()) {
             if (!SolidMobsMain.isExemptType(getType())) {
 
-                if ((!getType().equals(EntityType.SLIME) && !getType().equals(EntityType.MAGMA_CUBE)) || !solidMobsSolidMobsConfigData.bouncySlimes) {//move with mob
+                if ((!getType().equals(EntityType.SLIME) && !getType().equals(EntityType.MAGMA_CUBE)) || !solidMobsConfigData.bouncySlimes) {//move with mob
                     try {
                         @SuppressWarnings("DataFlowIssue") List<Entity> colliders = getEntityWorld().getOtherEntities(((Entity) (Object) this), boundingBox.expand(-0.03, 0.1, -0.03));
                         if (!colliders.isEmpty()) {
@@ -146,7 +146,7 @@ public abstract class MixinEntity {
                                 ) {
                                     //apply movement to this mob
                                     if (possibleStandingMob.isSneaking()) {
-                                        if (!solidMobsSolidMobsConfigData.platformMode) {
+                                        if (!solidMobsConfigData.platformMode) {
                                             //if sneaking snap player to centre of mob
                                             // prevents falling off cause sneaking
                                             double modifyY;

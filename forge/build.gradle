@@ -19,6 +19,8 @@ loom {
     }
 }
 
+archivesBaseName = rootProject.archives_base_name+"_forge.1.19.4+1.20"
+
 configurations {
     common
     shadowCommon // Don't use shadow from the shadow plugin because we don't want IDEA to index this.

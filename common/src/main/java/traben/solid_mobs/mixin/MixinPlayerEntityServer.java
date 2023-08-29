@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import traben.solid_mobs.SolidMobsMain;
 
 import static traben.solid_mobs.SolidMobsMain.LAST_PUSH_TIME;
-import static traben.solid_mobs.SolidMobsMain.solidMobsSolidMobsConfigData;
+import static traben.solid_mobs.SolidMobsMain.solidMobsConfigData;
 
 @Mixin(PlayerEntity.class)
 public abstract class MixinPlayerEntityServer extends LivingEntity {
@@ -36,14 +36,14 @@ public abstract class MixinPlayerEntityServer extends LivingEntity {
     @Inject(method = "interact", at = @At("HEAD"),cancellable = true)
     private void sm$tryPushServer(Entity entity, Hand hand, CallbackInfoReturnable<ActionResult> cir) {
         if (entity == null || entity.isRemoved() || getWorld().isClient()) return;
-        if (solidMobsSolidMobsConfigData.canUseMod(this.getWorld())
+        if (solidMobsConfigData.canUseMod(this.getWorld())
                 && entity instanceof LivingEntity alive
-                && solidMobsSolidMobsConfigData.allowShovingMobs
+                && solidMobsConfigData.allowShovingMobs
 
         ) {
             if (isSneaking()) {
                 if (LAST_PUSH_TIME.containsKey(getUuid())) {
-                    if (LAST_PUSH_TIME.get(getUuid()) + solidMobsSolidMobsConfigData.shoveAgainTimeInTicks < getWorld().getTime()) {
+                    if (LAST_PUSH_TIME.get(getUuid()) + solidMobsConfigData.shoveAgainTimeInTicks < getWorld().getTime()) {
                         if (sm$pushThisServer(alive)) cir.setReturnValue(ActionResult.PASS);
 
                     }
@@ -62,7 +62,7 @@ public abstract class MixinPlayerEntityServer extends LivingEntity {
 //            try {
                 if (entity instanceof VillagerEntity villager) {
                     villager.takeKnockback(0.15d, -(entity.getX() - this.getX()), -(entity.getZ() - this.getZ()));
-                    LAST_PUSH_TIME.put(getUuid(), getWorld().getTime() + (solidMobsSolidMobsConfigData.shoveAgainTimeInTicks /* * 2L*/));
+                    LAST_PUSH_TIME.put(getUuid(), getWorld().getTime() + (solidMobsConfigData.shoveAgainTimeInTicks /* * 2L*/));
                     swingHand(Hand.MAIN_HAND);
                     return true;
                 } else if (entity instanceof HostileEntity || entity instanceof Angerable) {
@@ -70,7 +70,7 @@ public abstract class MixinPlayerEntityServer extends LivingEntity {
                     entity.damage(entity.getDamageSources().playerAttack((PlayerEntity) ((Object) this)), 0);
                     //enemy.setAttacker((PlayerEntity) (Object)this);
                     //enemy.takeKnockback(0.5d, -(entity.getX() - this.getX()), -(entity.getZ() - this.getZ()));
-                    LAST_PUSH_TIME.put(getUuid(), getWorld().getTime() + (solidMobsSolidMobsConfigData.shoveAgainTimeInTicks /* * 5L*/));
+                    LAST_PUSH_TIME.put(getUuid(), getWorld().getTime() + (solidMobsConfigData.shoveAgainTimeInTicks /* * 5L*/));
                     swingHand(Hand.MAIN_HAND);
                     return true;
                 } else if (!SolidMobsMain.isExemptEntity(entity)) {

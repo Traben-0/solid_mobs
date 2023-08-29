@@ -20,7 +20,7 @@ public class SolidMobsCrossPlatformHelperImpl {
 
         PacketByteBuf buf = PacketByteBufs.create();
 
-        SolidMobsMain.solidMobsSolidMobsConfigData.encodeToByteBuffer(buf);
+        SolidMobsMain.solidMobsConfigData.encodeToByteBuffer(buf);
         System.out.println("[Solid Mobs] - Sending server config to ["+player.getName().getString()+"]");
         ServerPlayNetworking.send(player, SolidMobsMain.SERVER_CONFIG_PACKET_ID, buf);
     }

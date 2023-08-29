@@ -36,9 +36,9 @@ public class SolidMobsCommands {
     public static int blacklistAdd(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         try {
             String add = context.getArgument("text", String.class);
-            Set<String> list = new HashSet<>(List.of(SolidMobsMain.solidMobsSolidMobsConfigData.entityCollisionBlacklist));
+            Set<String> list = new HashSet<>(List.of(SolidMobsMain.solidMobsConfigData.entityCollisionBlacklist));
             list.add(add);
-            SolidMobsMain.solidMobsSolidMobsConfigData.entityCollisionBlacklist = list.toArray(new String[0]);
+            SolidMobsMain.solidMobsConfigData.entityCollisionBlacklist = list.toArray(new String[0]);
             SolidMobsMain.saveConfig();
             SolidMobsMain.resetExemptions();
             context.getSource().getServer().getPlayerManager().getPlayerList().forEach(SolidMobsCrossPlatformHelper::sendConfigToClient);
@@ -52,9 +52,9 @@ public class SolidMobsCommands {
     public static int blacklistRemove(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         try {
             String remove = context.getArgument("text", String.class);
-            Set<String> list = new HashSet<>(List.of(SolidMobsMain.solidMobsSolidMobsConfigData.entityCollisionBlacklist));
+            Set<String> list = new HashSet<>(List.of(SolidMobsMain.solidMobsConfigData.entityCollisionBlacklist));
             list.remove(remove);
-            SolidMobsMain.solidMobsSolidMobsConfigData.entityCollisionBlacklist = list.toArray(new String[0]);
+            SolidMobsMain.solidMobsConfigData.entityCollisionBlacklist = list.toArray(new String[0]);
             SolidMobsMain.saveConfig();
             SolidMobsMain.resetExemptions();
             context.getSource().getServer().getPlayerManager().getPlayerList().forEach(SolidMobsCrossPlatformHelper::sendConfigToClient);
@@ -66,8 +66,8 @@ public class SolidMobsCommands {
     }
 
     public static int blacklistClear(CommandContext<ServerCommandSource> context) {
-        String[] held = SolidMobsMain.solidMobsSolidMobsConfigData.entityCollisionBlacklist;
-        SolidMobsMain.solidMobsSolidMobsConfigData.entityCollisionBlacklist = new String[0];
+        String[] held = SolidMobsMain.solidMobsConfigData.entityCollisionBlacklist;
+        SolidMobsMain.solidMobsConfigData.entityCollisionBlacklist = new String[0];
         SolidMobsMain.saveConfig();
         SolidMobsMain.resetExemptions();
         context.getSource().getServer().getPlayerManager().getPlayerList().forEach(SolidMobsCrossPlatformHelper::sendConfigToClient);
@@ -80,7 +80,7 @@ public class SolidMobsCommands {
                 "The HARDCODED collision blacklist (set by the settings or the dev): "
                         + SolidMobsMain.EXEMPT_ENTITIES.toString()
                         + "\n§7_____________________________§r\nThe Custom collision blacklist (set by you): "
-                        + Arrays.toString(SolidMobsMain.solidMobsSolidMobsConfigData.entityCollisionBlacklist)
+                        + Arrays.toString(SolidMobsMain.solidMobsConfigData.entityCollisionBlacklist)
         ));
         return 1;
     }
@@ -127,7 +127,7 @@ public class SolidMobsCommands {
     }
 
     public static int resetAllSettings(CommandContext<ServerCommandSource> context) {
-        SolidMobsMain.solidMobsSolidMobsConfigData = new SolidMobsConfig();
+        SolidMobsMain.solidMobsConfigData = new SolidMobsConfig();
         SolidMobsMain.saveConfig();
         context.getSource().getServer().getPlayerManager().getPlayerList().forEach(SolidMobsCrossPlatformHelper::sendConfigToClient);
         sendCommandFeedback(context, ("Solid Mobs server config reset to defaults."));
@@ -182,7 +182,7 @@ public class SolidMobsCommands {
     }
 
     public static int printSettings(CommandContext<ServerCommandSource> context) {
-        sendCommandFeedback(context, (SolidMobsMain.solidMobsSolidMobsConfigData.toString()));
+        sendCommandFeedback(context, (SolidMobsMain.solidMobsConfigData.toString()));
         return 1;
     }
 
@@ -231,76 +231,76 @@ public class SolidMobsCommands {
                 .then(CommandManager.literal("settings")
                         .executes(SolidMobsCommands::printSettings)
                         .then(CommandManager.literal("slimesAreBouncy").executes((context ->
-                                        returnMessageValue(context, SolidMobsMain.solidMobsSolidMobsConfigData.bouncySlimes,
+                                        returnMessageValue(context, SolidMobsMain.solidMobsConfigData.bouncySlimes,
                                                 "Sets whether or not Slimes & Magma cubes cause you to bounce like the blocks.")))
                                 .then(CommandManager.argument("set", BoolArgumentType.bool())
-                                        .executes((context -> runBooleanConfigCommand(context, (val) -> SolidMobsMain.solidMobsSolidMobsConfigData.bouncySlimes = val))))
+                                        .executes((context -> runBooleanConfigCommand(context, (val) -> SolidMobsMain.solidMobsConfigData.bouncySlimes = val))))
                         )
                         .then(CommandManager.literal("platformMode").executes((context ->
-                                        returnMessageValue(context, SolidMobsMain.solidMobsSolidMobsConfigData.platformMode,
+                                        returnMessageValue(context, SolidMobsMain.solidMobsConfigData.platformMode,
                                                 "If 'true' mobs will only be solid when walking on top of them.\n You can also press crouch to fall through them like platforms.")))
                                 .then(CommandManager.argument("set", BoolArgumentType.bool())
-                                        .executes((context -> runBooleanConfigCommand(context, (val) -> SolidMobsMain.solidMobsSolidMobsConfigData.platformMode = val))))
+                                        .executes((context -> runBooleanConfigCommand(context, (val) -> SolidMobsMain.solidMobsConfigData.platformMode = val))))
                         )
                         .then(CommandManager.literal("canShoveMobs").executes((context ->
-                                        returnMessageValue(context, SolidMobsMain.solidMobsSolidMobsConfigData.allowShovingMobs,
+                                        returnMessageValue(context, SolidMobsMain.solidMobsConfigData.allowShovingMobs,
                                                 "Sets whether or not you can shove mobs, mobs can be shoved by crouching and right clicking them.\nThis allows you to get un-stuck when crammed in by a mob.\nBeware neutral mobs may get mad after being shoved.\nThe cooldown between shoving attempts can be set with the 'shovingMobsCoolDownTicks' setting")))
                                 .then(CommandManager.argument("set", BoolArgumentType.bool())
-                                        .executes((context -> runBooleanConfigCommand(context, (val) -> SolidMobsMain.solidMobsSolidMobsConfigData.allowShovingMobs = val))))
+                                        .executes((context -> runBooleanConfigCommand(context, (val) -> SolidMobsMain.solidMobsConfigData.allowShovingMobs = val))))
                         )
                         .then(CommandManager.literal("canItemsCollide").executes((context ->
-                                        returnMessageValue(context, SolidMobsMain.solidMobsSolidMobsConfigData.allowItemCollisions,
+                                        returnMessageValue(context, SolidMobsMain.solidMobsConfigData.allowItemCollisions,
                                                 "Sets whether or not Items on the ground are made solid.")))
                                 .then(CommandManager.argument("set", BoolArgumentType.bool())
-                                        .executes((context -> runBooleanConfigCommand(context, (val) -> SolidMobsMain.solidMobsSolidMobsConfigData.allowItemCollisions = val))))
+                                        .executes((context -> runBooleanConfigCommand(context, (val) -> SolidMobsMain.solidMobsConfigData.allowItemCollisions = val))))
                         )
                         .then(CommandManager.literal("canPlayersCollide").executes((context ->
-                                        returnMessageValue(context, SolidMobsMain.solidMobsSolidMobsConfigData.allowPlayerCollisions,
+                                        returnMessageValue(context, SolidMobsMain.solidMobsConfigData.allowPlayerCollisions,
                                                 "Sets whether or not players can collide with other players.")))
                                 .then(CommandManager.argument("set", BoolArgumentType.bool())
-                                        .executes((context -> runBooleanConfigCommand(context, (val) -> SolidMobsMain.solidMobsSolidMobsConfigData.allowPlayerCollisions = val))))
+                                        .executes((context -> runBooleanConfigCommand(context, (val) -> SolidMobsMain.solidMobsConfigData.allowPlayerCollisions = val))))
                         )
                         .then(CommandManager.literal("canPetsCollide").executes((context ->
-                                        returnMessageValue(context, SolidMobsMain.solidMobsSolidMobsConfigData.allowPetCollisions,
+                                        returnMessageValue(context, SolidMobsMain.solidMobsConfigData.allowPetCollisions,
                                                 "Sets whether or not pet mobs collide. E.G. if you don't want your dog getting in your way.")))
                                 .then(CommandManager.argument("set", BoolArgumentType.bool())
-                                        .executes((context -> runBooleanConfigCommand(context, (val) -> SolidMobsMain.solidMobsSolidMobsConfigData.allowPetCollisions = val))))
+                                        .executes((context -> runBooleanConfigCommand(context, (val) -> SolidMobsMain.solidMobsConfigData.allowPetCollisions = val))))
                         )
                         .then(CommandManager.literal("canVillagersCollide").executes((context ->
-                                        returnMessageValue(context, SolidMobsMain.solidMobsSolidMobsConfigData.allowVillagerCollisions,
+                                        returnMessageValue(context, SolidMobsMain.solidMobsConfigData.allowVillagerCollisions,
                                                 "Sets whether or not Villagers can collide.")))
                                 .then(CommandManager.argument("set", BoolArgumentType.bool())
-                                        .executes((context -> runBooleanConfigCommand(context, (val) -> SolidMobsMain.solidMobsSolidMobsConfigData.allowVillagerCollisions = val))))
+                                        .executes((context -> runBooleanConfigCommand(context, (val) -> SolidMobsMain.solidMobsConfigData.allowVillagerCollisions = val))))
                         )
                         .then(CommandManager.literal("canInvisibleMobsCollide").executes((context ->
-                                        returnMessageValue(context, SolidMobsMain.solidMobsSolidMobsConfigData.allowInvisibleCollisions,
+                                        returnMessageValue(context, SolidMobsMain.solidMobsConfigData.allowInvisibleCollisions,
                                                 "Sets whether or not invisible mobs will still collide.")))
                                 .then(CommandManager.argument("set", BoolArgumentType.bool())
-                                        .executes((context -> runBooleanConfigCommand(context, (val) -> SolidMobsMain.solidMobsSolidMobsConfigData.allowInvisibleCollisions = val))))
+                                        .executes((context -> runBooleanConfigCommand(context, (val) -> SolidMobsMain.solidMobsConfigData.allowInvisibleCollisions = val))))
                         )
                         .then(CommandManager.literal("canFallDamageBeSharedWithLandedOnMobs").executes((context ->
-                                        returnMessageValue(context, SolidMobsMain.solidMobsSolidMobsConfigData.fallDamageSharedWithLandedOnMob,
+                                        returnMessageValue(context, SolidMobsMain.solidMobsConfigData.fallDamageSharedWithLandedOnMob,
                                                 "If 'true' then a percentage of fall damage is absorbed by any mob you fall onto.\nThis percentage can be set via the 'fallDamagePercentageSharedWithLandedOnMob' setting.")))
                                 .then(CommandManager.argument("set", BoolArgumentType.bool())
-                                        .executes((context -> runBooleanConfigCommand(context, (val) -> SolidMobsMain.solidMobsSolidMobsConfigData.fallDamageSharedWithLandedOnMob = val))))
+                                        .executes((context -> runBooleanConfigCommand(context, (val) -> SolidMobsMain.solidMobsConfigData.fallDamageSharedWithLandedOnMob = val))))
                         )
                         .then(CommandManager.literal("canNonSavingEntitesCollide").executes((context ->
-                                        returnMessageValue(context, SolidMobsMain.solidMobsSolidMobsConfigData.allowNonSavingEntityCollisions,
+                                        returnMessageValue(context, SolidMobsMain.solidMobsConfigData.allowNonSavingEntityCollisions,
                                                 "Sets whether or not Null/Unsaved entities can collide. Typically these might be decorative or logical entities depending on the mod.")))
                                 .then(CommandManager.argument("set", BoolArgumentType.bool())
-                                        .executes((context -> runBooleanConfigCommand(context, (val) -> SolidMobsMain.solidMobsSolidMobsConfigData.allowNonSavingEntityCollisions = val))))
+                                        .executes((context -> runBooleanConfigCommand(context, (val) -> SolidMobsMain.solidMobsConfigData.allowNonSavingEntityCollisions = val))))
                         )
                         .then(CommandManager.literal("fallDamagePercentageSharedWithLandedOnMob").executes((context ->
-                                        returnMessageValue(context, SolidMobsMain.solidMobsSolidMobsConfigData.fallDamageAmountAbsorbedByLandedOnMob,
+                                        returnMessageValue(context, SolidMobsMain.solidMobsConfigData.fallDamageAmountAbsorbedByLandedOnMob,
                                                 "If 'canFallDamageBeSharedWithLandedOnMobs' is enabled, this sets the percentage of fall damage shared with the other mob.\n0.5 = 50/50 split of the damage.\n0.75 = 25% fall damage taken by the falling mob and 75% damage taken by the mob being landed upon.")))
                                 .then(CommandManager.argument("set", FloatArgumentType.floatArg(0, 1))
-                                        .executes((context -> runFloatConfigCommand(context, (val) -> SolidMobsMain.solidMobsSolidMobsConfigData.fallDamageAmountAbsorbedByLandedOnMob = val))))
+                                        .executes((context -> runFloatConfigCommand(context, (val) -> SolidMobsMain.solidMobsConfigData.fallDamageAmountAbsorbedByLandedOnMob = val))))
                         )
                         .then(CommandManager.literal("shovingMobsCoolDownTicks").executes((context ->
-                                        returnMessageValue(context, SolidMobsMain.solidMobsSolidMobsConfigData.fallDamageAmountAbsorbedByLandedOnMob,
+                                        returnMessageValue(context, SolidMobsMain.solidMobsConfigData.fallDamageAmountAbsorbedByLandedOnMob,
                                                 "Sets the time in ticks between players being able to shove mobs.\n20 ticks = 1 second.")))
                                 .then(CommandManager.argument("set", IntegerArgumentType.integer(1, 9999999))
-                                        .executes((context -> runIntConfigCommand(context, (val) -> SolidMobsMain.solidMobsSolidMobsConfigData.fallDamageAmountAbsorbedByLandedOnMob = val))))
+                                        .executes((context -> runIntConfigCommand(context, (val) -> SolidMobsMain.solidMobsConfigData.fallDamageAmountAbsorbedByLandedOnMob = val))))
                         )
                         .then(CommandManager.literal("resetAllSettings").executes(SolidMobsCommands::resetAllSettings))
                         .then(CommandManager.literal("listAllSettings").executes(SolidMobsCommands::printSettings))
