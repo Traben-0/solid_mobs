@@ -1,5 +1,7 @@
 Solid mobs change-log
 
+## V1.7
+
 - improved general runtime efficiency.
 - Forge users can now join Fabric servers & have their settings sync correctly.*(Forge doesn't allow this the other way around :/)*
 - added `/solid_mobs` command with options for all config settings to allow tweaking in-game *(server usage requires operator permissions)*.

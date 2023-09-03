@@ -145,12 +145,17 @@ public class SolidMobsMain {
     public static final Object2BooleanLinkedOpenHashMap<CollisionEvent> COLLISION_HISTORY = new Object2BooleanLinkedOpenHashMap<>();
 
 
-    public static void registerCollision(String entity1, String entity2, boolean result) {
+    public static void registerCollisionOnServer( String entity1, String entity2, boolean result) {
+        //server side only
         CollisionEvent event = new CollisionEvent(entity1, entity2);
-        COLLISION_HISTORY.putAndMoveToLast(event, result);
         if (COLLISION_HISTORY.size() > 64) {
-            COLLISION_HISTORY.removeFirstBoolean();
+            CollisionEvent lastKey = COLLISION_HISTORY.lastKey();
+            if (!event.equals(lastKey)) {
+                COLLISION_HISTORY.removeBoolean(lastKey);
+            }
         }
+        COLLISION_HISTORY.putAndMoveToFirst(event, result);
+
     }
 
     public record CollisionEvent(String first, String second) {
