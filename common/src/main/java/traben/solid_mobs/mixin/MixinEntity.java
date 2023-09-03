@@ -98,7 +98,8 @@ public abstract class MixinEntity {
 
     @Inject(method = "collidesWith", cancellable = true, at = @At("RETURN"))
     private void sm$collisionOverride(Entity other, CallbackInfoReturnable<Boolean> cir) {
-        if (solidMobsConfigData.canUseMod(this.getWorld())) {
+        World world = this.getWorld();
+        if (solidMobsConfigData.canUseMod(world)) {
             boolean collides = cir.getReturnValue();
             EntityType<?> thisType = getType();
             if (SolidMobsMain.isExemptType(thisType)) { // || EXEMPT_ENTITIES.contains(other.getType().toString())) {
@@ -109,15 +110,15 @@ public abstract class MixinEntity {
             }
             if (solidMobsConfigData.platformMode && collides) {
                 if (isSneaking()) {
-                    SolidMobsMain.registerCollision(thisType.toString(), other.getType().toString(), false);
+                    if(!world.isClient()) SolidMobsMain.registerCollisionOnServer(thisType.toString(), other.getType().toString(), false);
                     cir.setReturnValue(false);
                 } else {
                     collides = getY() + 0.01 >= other.getY() + other.getBoundingBox().getYLength();
-                    SolidMobsMain.registerCollision(thisType.toString(), other.getType().toString(), collides);
+                    if(!world.isClient()) SolidMobsMain.registerCollisionOnServer(thisType.toString(), other.getType().toString(), collides);
                     cir.setReturnValue(collides);
                 }
             } else {
-                SolidMobsMain.registerCollision(thisType.toString(), other.getType().toString(), collides);
+                if(!world.isClient()) SolidMobsMain.registerCollisionOnServer(thisType.toString(), other.getType().toString(), collides);
                 cir.setReturnValue(collides);
             }
         }
