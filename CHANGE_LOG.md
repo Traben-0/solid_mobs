@@ -1,5 +1,8 @@
 Solid mobs change-log
 
+## v1.7.1
+- fixed a crash related to the collision history list (java.lang.ArrayIndexOutOfBoundsException)
+
 ## V1.7
 
 - improved general runtime efficiency.
