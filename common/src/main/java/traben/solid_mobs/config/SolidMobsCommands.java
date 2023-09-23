@@ -206,7 +206,6 @@ public class SolidMobsCommands {
 
 
     public static void registerCommands(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess ignoredRegistryAccess, CommandManager.RegistrationEnvironment ignoredEnvironment) {
-
         dispatcher.register(CommandManager.literal("solid_mobs")
                 .requires(source -> source.hasPermissionLevel(4)
                         || (source.getServer().isSingleplayer() && source.getPlayer() != null && source.getServer().isHost(source.getPlayer().getGameProfile()))
