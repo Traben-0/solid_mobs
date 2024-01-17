@@ -1,0 +1,35 @@
+modLoader = "javafml"
+loaderVersion = "[1,)"
+issueTrackerURL = "https://github.com/Traben-0/solid_mobs/issues"
+license = "LGPL-3.0"
+
+[[mods]]
+modId = "solid_mobs"
+version = "${version}"
+displayName = "Solid Mobs"
+authors = "Traben"
+description = '''
+Makes mobs have collisions
+Customizable via config file in config folder.
+Server config will override client config
+'''
+logoFile = "icon.png"
+
+[[dependencies.solid_mobs]]
+modId = "neoforge"
+mandatory = true
+versionRange = "[20.2,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.solid_mobs]]
+modId = "minecraft"
+mandatory = true
+versionRange = "[1.20.2,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[mixins]]
+config = "solid_mobs.mixins.json"
+[[mixins]]
+config = "solid_mobs-common.mixins.json"
