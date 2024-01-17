@@ -19,7 +19,7 @@ loom {
 //    }
 }
 
-archivesBaseName = rootProject.archives_base_name+"_neoforge.1.20.2"
+archivesBaseName = rootProject.archives_base_name+"_neoforge.1.20.4"
 
 configurations {
     common
