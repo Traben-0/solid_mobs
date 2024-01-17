@@ -2,13 +2,11 @@ package traben.solid_mobs.forge;
 
 import net.minecraft.network.PacketByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.event.network.CustomPayloadEvent;
 import net.minecraftforge.fml.loading.FMLEnvironment;
-import net.minecraftforge.network.NetworkEvent;
 import traben.solid_mobs.SolidMobsMain;
 import traben.solid_mobs.client.SolidMobsClient;
 import traben.solid_mobs.config.SolidMobsConfig;
-
-import java.util.function.Supplier;
 
 import static traben.solid_mobs.SolidMobsMain.solidMobsConfigData;
 
@@ -52,10 +50,10 @@ public class SolidMobsSolidMobsConfigPacket extends SolidMobsConfig
 
 
 
-    public void messageConsumer(Supplier<NetworkEvent.Context> ctx) {
+    public static void messageConsumer(SolidMobsSolidMobsConfigPacket packet, CustomPayloadEvent.Context ctx) {
         // Handle message
-        if(is_valid) {
-            solidMobsConfigData = this;
+        if(packet.is_valid) {
+            solidMobsConfigData = packet;
 
             SolidMobsMain.resetExemptions();
             SolidMobsClient.haveServerConfig = true;
@@ -64,6 +62,7 @@ public class SolidMobsSolidMobsConfigPacket extends SolidMobsConfig
             System.out.println("[Solid mobs] - Server Config data received and failed to sync\n solids mobs will be disabled");
             //disabling happens automatically with server config not being properly received
         }
-        ctx.get().setPacketHandled(true);
+        ctx.setPacketHandled(true);
+        //ctx.get().setPacketHandled(true);
     }
 }

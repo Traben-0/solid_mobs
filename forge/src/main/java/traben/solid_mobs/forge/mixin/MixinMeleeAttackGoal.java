@@ -43,14 +43,14 @@ public abstract class MixinMeleeAttackGoal extends Goal {
     @Shadow private int cooldown;
 
     @Inject(method = "attack", at = @At("TAIL"))
-    private void sm$forceAttackOnTouch(LivingEntity target, double squaredDistance, CallbackInfo ci){
+    private void sm$forceAttackOnTouch(LivingEntity target, CallbackInfo ci){
         //try attack again if mob is in contact with another but not within vanilla attack range
         //e.g. zombie on top of a villager cannot attack with vanilla reach
         if (this.cooldown <= 0) {
             //means we didn't attack and have cooled down
             try {
                 if (solidMobsConfigData.canUseMod(this.mob.getWorld())
-                        && this.mob.getWorld().getOtherEntities(this.mob, this.mob.getBoundingBox().expand(0.1)).contains(this.mob.getTarget())
+                        && this.mob.getWorld().getOtherEntities(this.mob, this.mob.getBoundingBox().expand(0.01)).contains(this.mob.getTarget())
                 ) {
                     this.resetCooldown();
                     this.mob.swingHand(Hand.MAIN_HAND);

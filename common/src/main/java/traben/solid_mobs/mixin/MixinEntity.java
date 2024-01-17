@@ -113,7 +113,7 @@ public abstract class MixinEntity {
                     if(!world.isClient()) SolidMobsMain.registerCollisionOnServer(thisType.toString(), other.getType().toString(), false);
                     cir.setReturnValue(false);
                 } else {
-                    collides = getY() + 0.01 >= other.getY() + other.getBoundingBox().getYLength();
+                    collides = getY() + 0.01 >= other.getY() + other.getBoundingBox().getLengthY();
                     if(!world.isClient()) SolidMobsMain.registerCollisionOnServer(thisType.toString(), other.getType().toString(), collides);
                     cir.setReturnValue(collides);
                 }
