@@ -11,7 +11,7 @@ import static traben.solid_mobs.SolidMobsMain.solidMobsConfigData;
 
 public abstract class SMData implements CustomPayload {
 
-    public static final Id<SMData> id = new Id<>(new Identifier("solid_mobs:sync"));
+    public static final Id<SMData> id = new Id<>(Identifier.of("solid_mobs:sync"));
 
 
 
