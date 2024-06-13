@@ -1,19 +1,16 @@
 package traben.solid_mobs.neoforge;
 
 
+import net.minecraft.network.RegistryByteBuf;
+import net.minecraft.network.codec.PacketCodec;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.ModContainer;
-import net.neoforged.fml.ModLoader;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.event.IModBusEvent;
-import net.neoforged.fml.event.lifecycle.ModLifecycleEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
-import net.neoforged.neoforge.network.event.OnGameConfigurationEvent;
-import net.neoforged.neoforge.network.event.RegisterPayloadHandlerEvent;
-import net.neoforged.neoforge.network.handlers.ClientPayloadHandler;
-import net.neoforged.neoforge.network.handlers.ServerPayloadHandler;
-import net.neoforged.neoforge.network.registration.IPayloadRegistrar;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
+import net.neoforged.neoforge.network.registration.PayloadRegistrar;
+import traben.solid_mobs.SMData;
 import traben.solid_mobs.SolidMobsMain;
 import traben.solid_mobs.config.SolidMobsCommands;
 
@@ -32,19 +29,18 @@ public class SolidMobsNeoForge {
         System.out.println("[Solid Mobs] commands registered");
         SolidMobsCommands.registerCommands(event.getDispatcher(), null, null);
     }
-}
 
-    @Mod.EventBusSubscriber(modid = "solid_mobs", bus = Mod.EventBusSubscriber.Bus.MOD)
+}
+    @EventBusSubscriber(modid = "solid_mobs", bus = EventBusSubscriber.Bus.MOD)
     class ModRegister{
         @SubscribeEvent
-        public static void register(RegisterPayloadHandlerEvent event) {
-            final IPayloadRegistrar registrar = event.registrar("solid_mobs");
+        public static void onPayloadRegister(RegisterPayloadHandlersEvent event) {
+            // final IPayloadRegistrar registrar = event.registrar("solid_mobs");
+            PayloadRegistrar registrar = event.registrar("solid_mobs");
+            registrar.playToClient(SMData.id, SMDataNeo.CODEC, (a,b) -> SMClientHandler.getInstance().handleData(a));
 
-            registrar.play(SMData.id, SMData::read, handler -> handler
-                            .client(SMClientHandler.getInstance()::handleData)
-                    .server((a,b)-> System.out.println("[Solid Mobs] sent to server ??"))
-            );
         }
     }
+
 
 

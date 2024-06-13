@@ -1,7 +1,9 @@
 package traben.solid_mobs.neoforge;
 
 import net.minecraft.text.Text;
-import net.neoforged.neoforge.network.handling.PlayPayloadContext;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
+
+import traben.solid_mobs.SMData;
 import traben.solid_mobs.SolidMobsMain;
 import traben.solid_mobs.client.SolidMobsClient;
 
@@ -15,14 +17,17 @@ public class SMClientHandler {
         return INSTANCE;
     }
 
-    public void handleData(final SMData data, final PlayPayloadContext context) {
+    public void handleData(final SMData data) {
 //        // Do something with the data, on the network thread
 //        blah(data.name());
-
+        if (!(data instanceof final SMData smData)) {
+            System.out.println(Text.of("solid mobs networking failed. "+ data.getClass().getName()));
+            return;
+        }
         // Do something with the data, on the main thread
-        context.workHandler().submitAsync(() -> {
-                    if(data.isValid()) {
-                        solidMobsConfigData = data.delegate;
+        try {
+                    if(smData.isValid()) {
+                        solidMobsConfigData = smData.delegate;
 
                         SolidMobsMain.resetExemptions();
                         SolidMobsClient.haveServerConfig = true;
@@ -31,11 +36,10 @@ public class SMClientHandler {
                         System.out.println("[Solid mobs] - Server Config data received and failed to sync\n solids mobs will be disabled");
                         //disabling happens automatically with server config not being properly received
                     }
-                })
-                .exceptionally(e -> {
+                } catch (Exception e) {
                     // Handle exception
-                    context.packetHandler().disconnect(Text.of("solid mobs networking failed. "+ e.getMessage()));
-                    return null;
-                });
+                System.out.println(Text.of("solid mobs networking failed. "+ e.getMessage()));
+//                    return null;
+                }
     }
 }
