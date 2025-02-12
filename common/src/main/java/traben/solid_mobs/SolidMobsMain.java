@@ -22,7 +22,7 @@ public class SolidMobsMain {
 
     public static HashSet<String> EXEMPT_ENTITIES = new HashSet<>();
 
-    public static final Identifier SERVER_CONFIG_PACKET_ID = new Identifier("traben_solid_mobs:server_config_packet");
+    public static final Identifier SERVER_CONFIG_PACKET_ID = Identifier.of("traben_solid_mobs:server_config_packet");
 
     public static final HashMap<UUID, Long> LAST_PUSH_TIME = new HashMap<>();
     // public static final HashMap<UUID, Long> lastAttackTime = new HashMap<>();

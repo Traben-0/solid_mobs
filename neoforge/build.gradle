@@ -19,7 +19,7 @@ loom {
 //    }
 }
 
-archivesBaseName = rootProject.archives_base_name+"_neoforge.1.20.2"
+archivesBaseName = rootProject.archives_base_name+"_neoforge.1.21"
 
 configurations {
     common
@@ -45,7 +45,7 @@ repositories{
 processResources {
     inputs.property "version", project.version
 
-    filesMatching("META-INF/mods.toml") {
+    filesMatching("META-INF/neoforge.mods.toml") {
         expand "version": project.version
     }
 }

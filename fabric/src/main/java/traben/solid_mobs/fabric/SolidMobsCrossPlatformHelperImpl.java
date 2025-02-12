@@ -6,6 +6,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import traben.solid_mobs.SolidMobsMain;
+import traben.solid_mobs.fabriclike.SMDataFab;
 
 import java.nio.file.Path;
 
@@ -22,7 +23,7 @@ public class SolidMobsCrossPlatformHelperImpl {
 
         SolidMobsMain.solidMobsConfigData.encodeToByteBuffer(buf);
         System.out.println("[Solid Mobs] - Sending server config to ["+player.getName().getString()+"]");
-        ServerPlayNetworking.send(player, SolidMobsMain.SERVER_CONFIG_PACKET_ID, buf);
+        ServerPlayNetworking.send(player,   SMDataFab.read(buf));//todo just init and send the object normally in 1.20.6+ ?????
     }
 
 
