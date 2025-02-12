@@ -7,6 +7,7 @@ import net.minecraft.entity.mob.Angerable;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
@@ -67,7 +68,7 @@ public abstract class MixinPlayerEntityServer extends LivingEntity {
                     return true;
                 } else if (entity instanceof HostileEntity || entity instanceof Angerable) {
                     //noinspection DataFlowIssue
-                    entity.damage(entity.getDamageSources().playerAttack((PlayerEntity) ((Object) this)), 0);
+                    entity.damage((ServerWorld) entity.getWorld(),entity.getDamageSources().playerAttack((PlayerEntity) ((Object) this)), 0);
                     //enemy.setAttacker((PlayerEntity) (Object)this);
                     //enemy.takeKnockback(0.5d, -(entity.getX() - this.getX()), -(entity.getZ() - this.getZ()));
                     LAST_PUSH_TIME.put(getUuid(), getWorld().getTime() + (solidMobsConfigData.shoveAgainTimeInTicks /* * 5L*/));
