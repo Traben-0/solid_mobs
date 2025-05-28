@@ -4,6 +4,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.entity.mob.PathAwareEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Hand;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -46,7 +47,7 @@ public abstract class MixinMeleeAttackGoal extends Goal {
     private void sm$forceAttackOnTouch(LivingEntity target, CallbackInfo ci){
         //try attack again if mob is in contact with another but not within vanilla attack range
         //e.g. zombie on top of a villager cannot attack with vanilla reach
-        if (this.cooldown <= 0) {
+        if (this.cooldown <= 0 && this.mob != null && this.mob.getWorld() instanceof ServerWorld server) {
             //means we didn't attack and have cooled down
             try {
                 if (solidMobsConfigData.canUseMod(this.mob.getWorld())
@@ -54,7 +55,7 @@ public abstract class MixinMeleeAttackGoal extends Goal {
                 ) {
                     this.resetCooldown();
                     this.mob.swingHand(Hand.MAIN_HAND);
-                    this.mob.tryAttack(target);
+                    this.mob.tryAttack(server,target);
                 }
             }catch(Exception e){
                 //
