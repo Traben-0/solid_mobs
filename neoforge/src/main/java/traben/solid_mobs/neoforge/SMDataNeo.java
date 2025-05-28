@@ -48,7 +48,7 @@ public class SMDataNeo extends SMData {
             }
         }else{
             System.out.println("[Solid mobs] - received on server?????");
-            packet = new SMDataNeo(null);
+            packet = new SMDataNeo(new SolidMobsConfig(buffer));
         }
         return packet;
     }

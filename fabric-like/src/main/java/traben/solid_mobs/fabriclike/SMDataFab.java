@@ -47,8 +47,7 @@ public class SMDataFab extends SMData {
                 packet = new SMDataFab(null);
             }
         }else{
-            System.out.println("[Solid mobs] - received on server?????");
-            packet = new SMDataFab(null);
+            packet = new SMDataFab(new SolidMobsConfig(buffer));
         }
         return packet;
     }

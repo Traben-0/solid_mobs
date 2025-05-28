@@ -38,8 +38,8 @@ public class SolidMobsSolidMobsConfigPacket extends SolidMobsConfig
                 packet.is_valid = false;
             }
         }else{
-            packet = new SolidMobsSolidMobsConfigPacket();
-            packet.is_valid = false;
+            packet = new SolidMobsSolidMobsConfigPacket(buffer);
+            packet.is_valid = true;
         }
         return packet;
     }

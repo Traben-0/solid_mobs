@@ -6,6 +6,9 @@ import it.unimi.dsi.fastutil.objects.Object2BooleanLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2BooleanOpenHashMap;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.passive.AnimalEntity;
+import net.minecraft.entity.passive.PigEntity;
 import net.minecraft.util.Identifier;
 import traben.solid_mobs.client.SolidMobsClient;
 import traben.solid_mobs.config.SolidMobsConfig;
@@ -55,7 +58,8 @@ public class SolidMobsMain {
             EXEMPT_ENTITIES.add(EntityType.PARROT.toString());
         }
         EXEMPT_ENTITIES.add(EntityType.ENDER_DRAGON.toString());
-        EXEMPT_ENTITIES.add(EntityType.POTION.toString());
+        EXEMPT_ENTITIES.add(EntityType.SPLASH_POTION.toString());
+        EXEMPT_ENTITIES.add(EntityType.LINGERING_POTION.toString());
         EXEMPT_ENTITIES.add(EntityType.EGG.toString());
         EXEMPT_ENTITIES.add(EntityType.ENDER_PEARL.toString());
         EXEMPT_ENTITIES.add(EntityType.EXPERIENCE_BOTTLE.toString());
@@ -79,7 +83,7 @@ public class SolidMobsMain {
         EXEMPT_ENTITIES.add(EntityType.TEXT_DISPLAY.toString());
         EXEMPT_ENTITIES.add(EntityType.INTERACTION.toString());
 
-        EXEMPT_ENTITIES.addAll(Arrays.asList(solidMobsConfigData.entityCollisionBlacklist));
+        EXEMPT_ENTITIES.addAll(solidMobsConfigData.entityCollisionBlacklist);
 
 
         //no player types in return list this is handled by player on player collisions
@@ -91,9 +95,16 @@ public class SolidMobsMain {
 
     public static final Object2BooleanOpenHashMap<EntityType<?>> EXEMPT_CACHE = new Object2BooleanOpenHashMap<>();
     public static boolean isExemptEntity(Entity entity){
+        if (!solidMobsConfigData.allowBabyCollisions
+                && entity instanceof LivingEntity alive
+                && alive.isBaby()) {
+            return true; //baby mobs exempted
+        }
         return isExemptType(entity.getType());
     }
-    public static boolean isExemptType(EntityType<?> entityType){
+
+    private static boolean isExemptType(EntityType<?> entityType){
+        if (entityType == null) return true;
         //hashmap faster
         if(EXEMPT_CACHE.containsKey(entityType)){
             return EXEMPT_CACHE.getBoolean(entityType);

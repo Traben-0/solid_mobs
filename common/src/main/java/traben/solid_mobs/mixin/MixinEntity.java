@@ -78,7 +78,7 @@ public abstract class MixinEntity {
 
                 //ignore if in exemption list
                 //lets ignore invis stuff, could be problematic with some builds
-                if (SolidMobsMain.isExemptType(getType())) {
+                if (SolidMobsMain.isExemptEntity((Entity) (Object) this)) {
                     //System.out.println("true for "+getName().getString());
                     returnValue = false;
                 } else {//return false if invisible
@@ -102,12 +102,20 @@ public abstract class MixinEntity {
         if (solidMobsConfigData.canUseMod(world)) {
             boolean collides = cir.getReturnValue();
             EntityType<?> thisType = getType();
-            if (SolidMobsMain.isExemptType(thisType)) { // || EXEMPT_ENTITIES.contains(other.getType().toString())) {
+
+            if (SolidMobsMain.isExemptEntity((Entity) (Object) this)) { // || EXEMPT_ENTITIES.contains(other.getType().toString())) {
                 collides = false;
             } else if (isPlayer() && other.isPlayer() && !solidMobsConfigData.allowPlayerCollisions) {
-                //only affect player on player collisions we still need other things to collide with players so PLAYER cannot be in exempt list
+                // only affect player on player collisions we still need other things to collide with players so PLAYER cannot be in exempt list
                 collides = false;
+            } else if (solidMobsConfigData.playerOnlyMode && !isPlayer() && !other.isPlayer()) {
+                collides = false; // no players involved
+            } else if (solidMobsConfigData.ignoreCollisionsWhenCrouching
+                    && ((isPlayer() && isSneaking())
+                        || (other.isPlayer() && other.isSneaking()))) {
+                collides = false; // ignore collision with crouched player
             }
+
             if (solidMobsConfigData.platformMode && collides) {
                 if (isSneaking()) {
                     if(!world.isClient()) SolidMobsMain.registerCollisionOnServer(thisType.toString(), other.getType().toString(), false);
@@ -128,9 +136,9 @@ public abstract class MixinEntity {
     @Inject(method = "tick", at = @At("TAIL"))
     private void sm$moveWalkingRider(CallbackInfo ci) {
         if (solidMobsConfigData.canUseMod(this.getWorld()) && this.isLiving()) {
-            if (!SolidMobsMain.isExemptType(getType())) {
+            if (!SolidMobsMain.isExemptEntity((Entity) (Object) this)) {
 
-                if ((!getType().equals(EntityType.SLIME) && !getType().equals(EntityType.MAGMA_CUBE)) || !solidMobsConfigData.bouncySlimes) {//move with mob
+                if (getType() != null && !solidMobsConfigData.entityBounceList.contains(getType().toString())) {//move with mob
                     try {
                         @SuppressWarnings("DataFlowIssue") List<Entity> colliders = getEntityWorld().getOtherEntities(((Entity) (Object) this), boundingBox.expand(-0.03, 0.1, -0.03));
                         if (!colliders.isEmpty()) {
@@ -141,6 +149,10 @@ public abstract class MixinEntity {
 //                    colliders.remove(rider);
 //                }
                             for (Entity possibleStandingMob : colliders) {
+                                if (solidMobsConfigData.playerOnlyMode && !possibleStandingMob.isPlayer()) {
+                                    continue; // only players allowed
+                                }
+
                                 if (possibleStandingMob.isLiving()
                                         && possibleStandingMob.getY() >= this.getY() + this.getHeight() - 0.06
                                     //&& this.collidesWith(possibleStandingMob)

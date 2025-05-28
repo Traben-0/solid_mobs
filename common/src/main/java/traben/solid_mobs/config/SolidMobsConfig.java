@@ -1,12 +1,15 @@
 package traben.solid_mobs.config;
 
 
+
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.world.World;
 import traben.solid_mobs.client.SolidMobsClient;
 
 import java.util.Arrays;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class SolidMobsConfig {
 
@@ -15,7 +18,6 @@ public class SolidMobsConfig {
     public boolean allowNonSavingEntityCollisions = false;
     public boolean allowPlayerCollisions = true;
     public boolean allowPetCollisions = true;
-    public boolean bouncySlimes = true;
     public boolean fallDamageSharedWithLandedOnMob = true;
     public float fallDamageAmountAbsorbedByLandedOnMob = 0.5F;
     // public boolean allowPaintingAndItemFrameCollisions = false;
@@ -24,8 +26,13 @@ public class SolidMobsConfig {
     public boolean allowShovingMobs = true;
     public int shoveAgainTimeInTicks = 20;
     public boolean allowVillagerCollisions = true;
+    public boolean allowBabyCollisions = false;
+    public boolean playerOnlyMode = false; //if true, only players can collide with mobs, not other mobs
+    public boolean ignoreCollisionsWhenCrouching = false;
 
-    public String[] entityCollisionBlacklist = {"entity.ratsmischief.rat"};
+
+    public Set<String> entityCollisionBlacklist = Arrays.stream(new String[]{"entity.ratsmischief.rat"}).collect(Collectors.toSet());
+    public Set<String> entityBounceList = Arrays.stream(new String[]{"entity.minecraft.slime", "entity.minecraft.magma_cube"}).collect(Collectors.toSet());
 
 
     public float getFallAbsorbAmount() {
@@ -53,22 +60,6 @@ public class SolidMobsConfig {
 
     }
 
-    @Override
-    public String toString() {
-        return "Solid Mobs, Settings:" +
-                "\n canItemsCollide=" + allowItemCollisions +
-                "\n canPlayersCollide=" + allowPlayerCollisions +
-                "\n canPetsCollide=" + allowPetCollisions +
-                "\n slimesAreBouncy=" + bouncySlimes +
-                "\n canFallDamageBeSharedWithLandedOnMobs=" + fallDamageSharedWithLandedOnMob +
-                "\n fallDamagePercentageSharedWithLandedOnMob=" + fallDamageAmountAbsorbedByLandedOnMob +
-                "\n canInvisibleMobsCollide=" + allowInvisibleCollisions +
-                "\n canShoveMobs=" + allowShovingMobs +
-                "\n shovingMobsCoolDownTicks=" + shoveAgainTimeInTicks +
-                "\n canVillagersCollide=" + allowVillagerCollisions +
-                "\n entityCollisionBlacklist=" + Arrays.toString(entityCollisionBlacklist);
-    }
-
     public static byte CONFIG_START_SYNC = (byte) -69;
     public void encodeToByteBuffer(PacketByteBuf buffer){
         System.out.println("[Solid Mobs] - Encoding server config packet for client.");
@@ -84,7 +75,6 @@ public class SolidMobsConfig {
         buffer.writeBoolean(allowItemCollisions);
         buffer.writeBoolean(allowPlayerCollisions);
         buffer.writeBoolean(allowPetCollisions);
-        buffer.writeBoolean(bouncySlimes);
         buffer.writeBoolean(fallDamageSharedWithLandedOnMob);
         buffer.writeFloat(getFallAbsorbAmount());
         //buf.writeBoolean(solidMobsConfigData.allowPaintingAndItemFrameCollisions);
@@ -92,13 +82,39 @@ public class SolidMobsConfig {
         buffer.writeBoolean(allowShovingMobs);
         buffer.writeInt(shoveAgainTimeInTicks);
         buffer.writeBoolean(allowVillagerCollisions);
+        buffer.writeBoolean(allowBabyCollisions);
+        buffer.writeBoolean(playerOnlyMode);
+        buffer.writeBoolean(ignoreCollisionsWhenCrouching);
         ///////////////////////////////////////////////
 //        buffer.writeInt(((CharSequence)Arrays.toString(entityCollisionBlacklist)).length());
 //        buffer.writeCharSequence(Arrays.toString(entityCollisionBlacklist), Charset.defaultCharset());
-        buffer.writeString(Arrays.toString(entityCollisionBlacklist));
+        buffer.writeString(Arrays.toString(entityCollisionBlacklist.toArray()));
+        buffer.writeString(Arrays.toString(entityBounceList.toArray()));
         ///////////////////////////////////////////////////
 
 
+    }
+
+    @Override
+    public String toString() {
+        return "SolidMobsConfig{\n" +
+                "platformMode=" + platformMode +
+                ",\n allowItemCollisions=" + allowItemCollisions +
+                ",\n allowNonSavingEntityCollisions=" + allowNonSavingEntityCollisions +
+                ",\n allowPlayerCollisions=" + allowPlayerCollisions +
+                ",\n allowPetCollisions=" + allowPetCollisions +
+                ",\n fallDamageSharedWithLandedOnMob=" + fallDamageSharedWithLandedOnMob +
+                ",\n fallDamageAmountAbsorbedByLandedOnMob=" + fallDamageAmountAbsorbedByLandedOnMob +
+                ",\n allowInvisibleCollisions=" + allowInvisibleCollisions +
+                ",\n allowShovingMobs=" + allowShovingMobs +
+                ",\n shoveAgainTimeInTicks=" + shoveAgainTimeInTicks +
+                ",\n allowVillagerCollisions=" + allowVillagerCollisions +
+                ",\n allowBabyCollisions=" + allowBabyCollisions +
+                ",\n playerOnlyMode=" + playerOnlyMode +
+                ",\n ignoreCollisionsWhenCrouching=" + ignoreCollisionsWhenCrouching +
+                ",\n entityCollisionBlacklist=" + entityCollisionBlacklist +
+                ",\n entityBounceList=" + entityBounceList +
+                "\n}";
     }
 
     public SolidMobsConfig(){}
@@ -126,7 +142,6 @@ public class SolidMobsConfig {
         allowItemCollisions = buffer.readBoolean();
         allowPlayerCollisions = buffer.readBoolean();
         allowPetCollisions = buffer.readBoolean();
-        bouncySlimes = buffer.readBoolean();
         fallDamageSharedWithLandedOnMob = buffer.readBoolean();
         setFallAbsorbAmount(buffer.readFloat());
         //solidMobsConfigData.allowPaintingAndItemFrameCollisions = buf.readBoolean();
@@ -134,6 +149,9 @@ public class SolidMobsConfig {
         allowShovingMobs = buffer.readBoolean();
         shoveAgainTimeInTicks = buffer.readInt();
         allowVillagerCollisions = buffer.readBoolean();
+        allowBabyCollisions = buffer.readBoolean();
+        playerOnlyMode = buffer.readBoolean();
+        ignoreCollisionsWhenCrouching = buffer.readBoolean();
         ///////////////////////////////////////////////
 //        int length = buffer.readInt();
 //        String read = (String) buffer.readCharSequence(length, Charset.defaultCharset());
@@ -141,7 +159,12 @@ public class SolidMobsConfig {
         //remove bracketing
         read = read.replaceFirst("^\\[", "").replaceFirst("]$", "");
         //split array string
-        entityCollisionBlacklist = read.split(", ");
+        entityCollisionBlacklist = Arrays.stream(read.split(", ")).collect(Collectors.toSet());
+        read = buffer.readString();
+        //remove bracketing
+        read = read.replaceFirst("^\\[", "").replaceFirst("]$", "");
+        //split array string
+        entityBounceList = Arrays.stream(read.split(", ")).collect(Collectors.toSet());
         //////////////////////////////////////////////////////
     }
 }

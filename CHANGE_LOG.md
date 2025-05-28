@@ -1,5 +1,16 @@
 Solid mobs change-log
 
+
+## v1.8
+- updated to 1.21.5
+- fixed a dedicated server config sending crash
+- added a command to add ALL entity types to the collision black list at once, effectively turning it into a whitelist instead
+- added a setting to disable collisions for baby mobs
+- added a setting for `player only mode` so only a collision involving players will occur
+- changed the slimes bouncy setting into a custom list of entities that will be bouncy, slimes and magma cubes are the only defaults
+- added a setting to ignoreCollisionsWhenCrouching to allow easier maneuvering when stuck
+
+
 ## v1.7.1
 - fixed a crash related to the collision history list (java.lang.ArrayIndexOutOfBoundsException)
 
